@@ -1,91 +1,73 @@
-<!DOCTYPE html>
-<!-------------------------------------------------------------------------------
-// * File Name: 
-// * Author:    
-// * ID:        
-// * Date:      
-// *
-// * Tested on: Google Chrome
--------------------------------------------------------------------------------->
-<html>
-<head>
-	<title>Memree Flashcards</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-	<script src="js/jquery.js"></script>
-	<script>
-    $(document).bind('mobileinit',function(){
-        $.mobile.changePage.defaults.changeHash = false;
-        $.mobile.hashListeningEnabled = false;
-        $.mobile.pushStateEnabled = false;
-    });
-	</script> 
-	<script src="js/jquery.mobile-1.4.5.min.js"></script>
-</head>
+<?php include('server.php') ?>
 
-<body onload="">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<!-------------------------------------------------------------------------------
-// * welcomePage
--------------------------------------------------------------------------------->
-<div data-role="page" data-theme="b" id="welcomePage">
+    <title>Memree Flashcards</title>
 
-	<div data-role="header">
-		<center><h1><font color="1b96fe">Memree Flashcards</font></h1></center>
-	</div><!-- /header -->
+    <!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	
-	<div role="main" class="ui-content" >
-		<div class="ui-field-contain" >
-			<input type="text" data-clear-btn="true" name="username" id="username" placeholder="Username">
-			<input type="password" data-clear-btn="true" name="password" id="password" autocomplete="off" placeholder="Password">
-		</div><!-- /form -->
-		
-		<a href="" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-power ui-shadow-icon" data-rel="dialog" data-transition="pop" onclick="login()">Login</a>
-		<a href="#createAccountPage" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-user ui-shadow-icon" data-rel="dialog" data-transition="pop">Create Account</a>
-	
-	</div><!-- /content -->
-	
-</div><!-- /welcomePage -->
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+  </head>
 
-<!-------------------------------------------------------------------------------
-// * createAccountPage
--------------------------------------------------------------------------------->
-<div data-role="page" id="createAccountPage" data-overlay-theme="b" data-close-btn="none">
+  <body class="text-center">
 	
-	<div data-role="header" data-theme="b">
-		<h1>Enter Information</h1>
-		<div class="ui-btn-right ui-shadow ui-corner-all">
-			<a href="index.html" data-role="button" data-icon="delete" data-iconpos="notext">Back</a>
+	<!-- Login Form -->
+    <form class="form-signin" method="post" action="">
+      <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+	  
+      <label for="inputEmail" class="sr-only">Username</label>
+      <input name="username" type="text" id="inputEmail" class="form-control" placeholder="Username" required autofocus>
+      
+	  <label for="inputPassword" class="sr-only">Password</label>
+      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+	  
+	  <button style="margin-top:10px;" name="login_user" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+	  <button class="btn btn-lg btn-secondary btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Register</button>
+      <br>
+	<?php include('errors.php'); ?>
+    </form>
+  
+	<!-- Registration Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLongTitle">User Registration</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+			  <div class="modal-body">
+				<form class="form-signin" method="post" action="">
+					
+					<label for="registerUsername" class="sr-only">Username</label>
+					<input id="registerUsername" name="username" type="text"  class="form-control" placeholder="Username" required autofocus>
+					
+					<label for="registerPass1" class="sr-only">Password</label>
+					<input id="registerPass1" name="password_1" type="password" class="form-control" placeholder="Password" required>
+					
+					<label for="registerPass2" class="sr-only">Confirm Password</label>
+					<input id="registerPass2" name="password_2" type="password" class="form-control" placeholder="Confirm Password" required>
+					
+					<button style="margin-top:10px;" name="reg_user" type="submit" class="btn btn-primary float-right">Register</button>
+				</form>
+			  </div>
+		  </div>
 		</div>
-	</div><!-- /header -->
-	
-	<div role="main" class="ui-content">
-		<div class="ui-field-contain">
-		<form action="register.php">
-			<input type="text" data-clear-btn="true" name="username" id="userCreate" placeholder="Username">
-			<input type="password" data-clear-btn="true" name="password" id="passCreate" autocomplete="off" placeholder="Password">
-			<input type="password" data-clear-btn="true" name="passwordConfirm" autocomplete="off" placeholder="Confirm Password">
-			<input class="ui-btn ui-corner-all ui-shadow ui-btn-b i-btn-b ui-btn-icon-left ui-icon-user ui-shadow-icon ui-btn-inline" type="submit" value="Create Acocunt">
-		</form>
-		</div> <!-- /form -->
-	</div> <!-- /content -->
-		
-</div> <!-- /createAccountPage -->
-
-<!-------------------------------------------------------------------------------
-// * accountCreatedDialog
--------------------------------------------------------------------------------->
-<div data-role="dialog" id="accountCreatedDialog" data-overlay-theme="b" data-theme="b" data-dismissible="false" data-close-btn="none">
-	<div data-role="header">
-		<h1>Account Created</h1>
+	  </div>
 	</div>
-	
-	<div role="main" class="ui-content">
-		<h3 class="ui-title">Account has been successfully created.</h3>
-		<p>Please login.</p>
-		<a href="index.html" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-direction="reverse">Done</a>
-	</div>
-</div><!-- /createAccountMessage -->
 
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
 </html>
