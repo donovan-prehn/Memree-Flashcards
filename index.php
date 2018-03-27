@@ -66,7 +66,7 @@
 			<input type="text" data-clear-btn="true" name="username" id="userCreate" placeholder="Username">
 			<input type="password" data-clear-btn="true" name="password" id="passCreate" autocomplete="off" placeholder="Password">
 			<input type="password" data-clear-btn="true" name="passwordConfirm" autocomplete="off" placeholder="Confirm Password">
-			<input class="ui-btn ui-corner-all ui-shadow ui-btn-b i-btn-b ui-btn-icon-left ui-icon-user ui-shadow-icon ui-btn-inline" type="submit" value="Create Acocunt">
+			<input class="ui-btn ui-corner-all ui-shadow ui-btn-b i-btn-b ui-btn-icon-left ui-icon-user ui-shadow-icon ui-btn-inline" type="submit" value="Create Account">
 		</form>
 		</div> <!-- /form -->
 	</div> <!-- /content -->
