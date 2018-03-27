@@ -9,7 +9,7 @@
 -------------------------------------------------------------------------------->
 <html>
 <head>
-	<title>Placeholder</title>
+	<title>Memree Flashcards</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
@@ -32,7 +32,7 @@
 <div data-role="page" data-theme="b" id="welcomePage">
 
 	<div data-role="header">
-		<center><h1><font color="1b96fe">Testing Change</font></h1></center>
+		<center><h1><font color="1b96fe">Memree Flashcards</font></h1></center>
 	</div><!-- /header -->
 	
 	<div role="main" class="ui-content" >
@@ -61,16 +61,17 @@
 	</div><!-- /header -->
 	
 	<div role="main" class="ui-content">
-		<div class="ui-field-contain" >
+		<div class="ui-field-contain">
+		<form action="register.php">
 			<input type="text" data-clear-btn="true" name="username" id="userCreate" placeholder="Username">
 			<input type="password" data-clear-btn="true" name="password" id="passCreate" autocomplete="off" placeholder="Password">
 			<input type="password" data-clear-btn="true" name="passwordConfirm" autocomplete="off" placeholder="Confirm Password">
-		</div><!-- /form -->
-			<a href="#accountCreatedDialog" data-rel="dialog" data-transition="pop" 
-				class="ui-btn ui-corner-all ui-shadow ui-btn-b i-btn-b ui-btn-icon-left ui-icon-user ui-shadow-icon ui-btn-inline" onclick="createAccount()">Create Account</a>
-	</div><!-- /content -->
+			<input class="ui-btn ui-corner-all ui-shadow ui-btn-b i-btn-b ui-btn-icon-left ui-icon-user ui-shadow-icon ui-btn-inline" type="submit" value="Create Acocunt">
+		</form>
+		</div> <!-- /form -->
+	</div> <!-- /content -->
 		
-</div><!-- /createAccountPage -->
+</div> <!-- /createAccountPage -->
 
 <!-------------------------------------------------------------------------------
 // * accountCreatedDialog
