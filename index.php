@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<script src="js/jquery.js"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	
 	<script>
     $(document).bind('mobileinit',function(){
         $.mobile.changePage.defaults.changeHash = false;
@@ -44,6 +47,55 @@
 		<a href="" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-power ui-shadow-icon" data-rel="dialog" data-transition="pop" onclick="login()">Login</a>
 		<a href="#createAccountPage" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-user ui-shadow-icon" data-rel="dialog" data-transition="pop">Create Account</a>
 	
+	<?php
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "memree_flashcards";
+	
+	
+
+	// Create connection
+	$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+	// Check connection
+	if (!$conn) {
+		die("Connection failed: " . mysqli_connect_error());
+	}
+	
+	$sql = "SELECT * FROM `deck` WHERE public='1'";
+	$result = mysqli_query($conn, $sql);
+	
+	$counter = 0;
+	while($row = $result->fetch_assoc()) {
+		$title = $row['title'];
+		$description = $row['description'];
+		
+		$imageBlob = $row['image'];
+		$image = imagecreatefromstring($imageBlob); 
+		ob_start();
+		imagejpeg($image, null, 80);
+		$data = ob_get_contents();
+		ob_end_clean();
+
+		echo '	<div class="card" style="width: 18rem;display: inline-block;">
+					<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
+					<div class="card-body">
+					  <h5 class="card-title" style="color: black;">'.$title.'</h5>
+					  <p class="card-text" style="color: black;">'.$description.'</p>
+					  <a href="#" class="ui-btn">View Deck</a>
+					</div>
+				</div>';
+		
+		$counter += 1;
+
+		
+		
+
+	}
+	
+	mysqli_close($conn);
+	?>
 	</div><!-- /content -->
 	
 </div><!-- /welcomePage -->
@@ -88,4 +140,12 @@
 	</div>
 </div><!-- /createAccountMessage -->
 
+<!-------------------------------------------------------------------------------
+// * Bootstrap javascripts
+-------------------------------------------------------------------------------->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
 </html>
