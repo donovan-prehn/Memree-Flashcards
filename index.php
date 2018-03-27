@@ -56,7 +56,7 @@
 	<div data-role="header" data-theme="b">
 		<h1>Enter Information</h1>
 		<div class="ui-btn-right ui-shadow ui-corner-all">
-			<a href="index.html" data-role="button" data-icon="delete" data-iconpos="notext">Back</a>
+			<a href="index.php" data-role="button" data-icon="delete" data-iconpos="notext">Back</a>
 		</div>
 	</div><!-- /header -->
 	
@@ -84,7 +84,7 @@
 	<div role="main" class="ui-content">
 		<h3 class="ui-title">Account has been successfully created.</h3>
 		<p>Please login.</p>
-		<a href="index.html" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-direction="reverse">Done</a>
+		<a href="index.php" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-direction="reverse">Done</a>
 	</div>
 </div><!-- /createAccountMessage -->
 
