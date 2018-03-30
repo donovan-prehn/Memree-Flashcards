@@ -37,6 +37,7 @@ if (isset($_POST['reg_user'])) {
   }
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
+	  
 	$password = password_hash($password_1, PASSWORD_BCRYPT);
 	array_push($alerts, "Account successfully created!");
   	$query = "INSERT INTO users (username, password) 
@@ -61,14 +62,16 @@ if (isset($_POST['login_user'])) {
   }
 
   if (count($errors) == 0) {
-
-  	$query = "SELECT password FROM users WHERE username='$username'";
+  	$query = "SELECT password, userID FROM users WHERE username='$username'";
   	$results = mysqli_query($db, $query);
 	$row = mysqli_fetch_array($results, MYSQLI_NUM);
 	$storedPassword = $row[0];
+	$userID = $row[1];
 	mysqli_free_result($results);
+
 	if(password_verify($password, $storedPassword)){
 	  	  $_SESSION['username'] = $username;
+		  $_SESSION['userID'] = $userID;
 		  $_SESSION['success'] = "You are now logged in";
 		  header('location: home.php');
 	}else{
