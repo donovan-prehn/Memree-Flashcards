@@ -95,11 +95,11 @@
 		$dbname = "memree_flashcards";
 		
 		// Create connection
-		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		$conn = new mysqli($servername, $username, $password, $dbname);
 		
 		// Check connection
-		if (!$conn) {
-			die("Connection failed: " . mysqli_connect_error());
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
 		}
 		
 		// Deck values
@@ -111,17 +111,19 @@
 		
 		if (!$imageName) { // No image selected, update title/description only
 			// Query to update the deck title and description only
-			$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
+			$stmt = $conn->prepare('UPDATE deck SET title=?, description=? WHERE userID=? and deckID=?');
+			$stmt->bind_param('ssii', $title, $description, $userID, $deckID);
 		} 
 		else {
-			$imageBlob = addslashes(file_get_contents($imageName)); // Converting to a blob
+			$null = NULL; // bind_param() requires parameters
 			// Query to update the deck title, description, and image
-			$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
+			$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, image=? WHERE userID=? and deckID=?');
+			$stmt->bind_param('ssbii', $title, $description, $null, $userID, $deckID);
+			
+			$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
 		}
 		
-		$result = mysqli_query($conn, $sql); // Run query
-		
-		if ($result) { // If query was successful
+		if ($stmt->execute()) { // If query was successful
 			// Display alert box
 			// Maybe find a nicer way to do this
 			echo '<script language="javascript">';
@@ -134,7 +136,8 @@
 			echo '</script>';
 		}
 		
-		mysqli_close($conn);
+		$stmt->close();
+		$conn->close();
 	}
 ?>
 <!DOCTYPE html>
