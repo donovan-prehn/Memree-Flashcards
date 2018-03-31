@@ -116,7 +116,6 @@
 		?>
 		  
 		<div class="container">
-			<h1>Deck</h1>
 			<div class="row bg-light px-3 py-3">
 				<div class="col-md-auto">
 					<h4>Deck Image</h4>
