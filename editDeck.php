@@ -119,10 +119,10 @@
 			<div class="row bg-light px-3 py-3">
 				<div class="col-md-auto">
 					<h4>Deck Image</h4>
-					<img src="icon.png" alt="..." class="img-thumbnail">
+					<img id="deckImage" src="icon.png" alt="..." class="img-thumbnail" width="192" height="192">
 				</div>
 				<div class="col-lg-6">
-					<form method="post">
+					<form method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<h4>Deck Title</h4>
 							<input type="text" name="deckTitle" class="form-control" id="inputDeckTitle" value="<?php echo $title;?>">
@@ -131,12 +131,35 @@
 							<h4>Deck Description</h4>
 							<input type="textarea" name="deckDescription" class="form-control" id="inputDeckTitle" value="<?php echo $description;?>">
 						</div>
+						Image (Max 2 MB):
+						<input type="file" id="imageFile" name="imageFile" value="Choose Image" onchange="displayChosenImage(this)">
+						<div id="imageDiv"></div>
 						<input type="submit" name="updateDeck" value="Update">
 						<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
 					</form>
 				</div>
 			</div>
 		</div>
+		
+		<script>
+		function displayChosenImage(input) {
+			var reader = new FileReader();
+			
+			reader.onload = function(e) {
+				
+				var fileSize = input.files[0].size;
+				var sizeString = (fileSize/1024/1024).toFixed(2) + " MB";
+				if (fileSize/1024/1024 < 1) {
+					sizeString = (fileSize/1024).toFixed(2) + " KB";
+				}
+				document.getElementById("imageDiv").innerHTML = "Size: " + sizeString;
+				document.getElementById("deckImage").src = e.target.result;
+			}
+			
+			reader.readAsDataURL(input.files[0]);
+			
+		}
+		</script>
 		
 		
 		
