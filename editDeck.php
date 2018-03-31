@@ -22,11 +22,11 @@
 		$dbname = "memree_flashcards";
 		
 		// Create connection
-		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		$conn = new mysqli($servername, $username, $password, $dbname);
 		
 		// Check connection
-		if (!$conn) {
-			die("Connection failed: " . mysqli_connect_error());
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
 		}
 		
 		// Card values
@@ -37,28 +37,37 @@
 		$imageNameQ = $_FILES["imageFileQ"]["tmp_name"]; // Get the path of image file for question
 		$imageNameA = $_FILES["imageFileA"]["tmp_name"]; // Get the path of image file for answer
 		
+		$null = NULL; // bind_param() requires parameters
+		
 		if (!$imageNameQ or !$imageNameA) { // No image for question/answer selected
 			if ($imageNameQ) { // Image selected for question
-				$imageBlobQ = addslashes(file_get_contents($imageNameQ)); // Converting to a blob
-				$sql = "INSERT INTO card (deckID, question, answer, questionImage) VALUES ('$deckID', '$question', '$answer', '$imageBlobQ');";
+				$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, questionImage) VALUES (?, ?, ?, ?)");
+				$stmt->bind_param('issb', $deckID, $question, $answer, $null);
+			
+				$stmt->send_long_data(3, file_get_contents($imageNameQ)); // Send blob of question image
 			}
 			elseif ($imageNameA) { // Image selected for answer
-				$imageBlobA = addslashes(file_get_contents($imageNameA)); // Converting to a blob
-				$sql = "INSERT INTO card (deckID, question, answer, answerImage) VALUES ('$deckID', '$question', '$answer', '$imageBlobA');";
+				$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, answerImage) VALUES (?, ?, ?, ?)");
+				$stmt->bind_param('issb', $deckID, $question, $answer, $null);
+			
+				$stmt->send_long_data(3, file_get_contents($imageNameA)); // Send blob of question image
 			}
 			else { // No images selected
-				$sql = "INSERT INTO card (deckID, question, answer) VALUES ('$deckID', '$question', '$answer');";
+				$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer) VALUES (?, ?, ?)");
+				$stmt->bind_param('iss', $deckID, $question, $answer);
 			}
 		} 
 		else { // Images selected for both Q/A
-			$imageBlobQ = addslashes(file_get_contents($imageNameQ)); // Converting to a blob
-			$imageBlobA = addslashes(file_get_contents($imageNameA)); // Converting to a blob
-			$sql = "INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES ('$deckID', '$question', '$answer', '$imageBlobQ', '$imageBlobA');";
+			
+			
+			$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES (?, ?, ?, ?, ?)");
+			$stmt->bind_param('issbb', $deckID, $question, $answer, $null, $null);
+			
+			$stmt->send_long_data(3, file_get_contents($imageNameQ)); // Send blob of question image
+			$stmt->send_long_data(4, file_get_contents($imageNameA)); // Send blob of answer image
 		}
 		
-		$result = mysqli_query($conn, $sql); // Run query
-		
-		if ($result) { // If query was successful
+		if ($stmt->execute()) { // If query was successful
 			// Display alert box
 			// Maybe find a nicer way to do this
 			echo '<script language="javascript">';
@@ -71,7 +80,8 @@
 			echo '</script>';
 		}
 		
-		mysqli_close($conn);
+		$stmt->close();
+		$conn->close();
 	}
 ?>
 		
@@ -260,43 +270,21 @@
 		function addCard() {
 			document.getElementById("addCardButton").click();
 		}
-		
-		//-----------------------------------------------------------------
-		// TESTING
-		//-----------------------------------------------------------------
-		/*var counter = 0;
-		// Called when user clicks "Add New Card" button
-		function addNewCard() {
-			document.getElementById("cards").innerHTML += '	<div class="card" style="width: 18rem;display: inline-block;"> ' +
-																
-																'<div class="card-body"> ' +
-																	
-																	'<img class="card-img-top" src="icon.png" alt="Card image cap"> '+
-																	'<input class="form-control form-control-lg mb-2" type="text" placeholder="Question">' +
-																	'<img class="card-img-top" src="icon.png" alt="Card image cap"> '+
-																	'<input class="form-control form-control-lg" type="text" placeholder="'+counter+'"> ' +
-																'</div> ' +
-															'</div>';
-			counter += 1;
-		}*/
-		
-		
 		</script>
 		
 		
 		<!-- HR between deck and cards -->
 		<hr class="mt-5"/>
 		
+		<!-- Card list container -->
 		<div class="container pb-3">
 			<h1>Cards
+				<!-- Button to add a new card -->
 				<input class='btn btn-primary' type='button' value='Add New Card' data-target='#addCardDialog' data-toggle='modal'/>
 			</h1>
 
-			<?php
-			include "php/displayCards.php"
-			?>
-			
-			
+			<!-- Call PHP file that displays the list of cards from the deck -->
+			<?php include "php/displayCards.php"; ?>
 		</div>
 		
 	</div>

@@ -6,21 +6,25 @@
 	$dbname = "memree_flashcards";
 	
 	// Create connection
-	$conn = mysqli_connect($servername, $username, $password, $dbname);
+	$conn = new mysqli($servername, $username, $password, $dbname);
 	
 	// Check connection
-	if (!$conn) {
-		die("Connection failed: " . mysqli_connect_error());
+	if ($conn->connect_error) {
+		die("Connection failed: " . $conn->connect_error);
 	}
 	
 	//$userID = $_SESSION['userID']; // Get user ID
 	$deckID = $_POST['deckID']; // Get Deck ID from previous page
-	$sql = "SELECT * FROM card WHERE deckID='$deckID'"; // Get all fields from selected card
-	$result = mysqli_query($conn, $sql); // Run query
 	
+	$stmt = $conn->prepare('SELECT * FROM card WHERE deckID=?'); // Get all fields from selected card
+	$stmt->bind_param('i', $deckID);
+	
+	$stmt->execute(); // Run query
+	
+	$result = $stmt->get_result(); // Get the results of running the query
 	while($row = $result->fetch_assoc()) {
-		$question = $row['question']; // Retrieve question from row
-		$answer = $row['answer']; // Retrieve answer from row
+		$question = htmlentities($row['question'], ENT_QUOTES); // Retrieve question from row replacing quotes with HTMl encoding if necessary
+		$answer = htmlentities($row['answer'], ENT_QUOTES); // Retrieve answer from row replacing quotes with HTMl encoding if necessary
 		
 		$imageBlobQ = $row['questionImage']; // Retrieve image blob of question
 		$imageBlobA = $row['answerImage']; // Retrieve image blob of answer
@@ -71,6 +75,7 @@
 				</div>
 			</div>";
 	
-	mysqli_close($conn);
+	$stmt->close();
+	$conn->close();
 				
 ?>
