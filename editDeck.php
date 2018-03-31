@@ -107,6 +107,13 @@
 			$row = $result->fetch_assoc();
 			$title = $row['title'];
 			$description = $row['description'];
+			
+			$imageBlob = $row['image'];
+			$image = imagecreatefromstring($imageBlob); 
+			ob_start();
+			imagejpeg($image, null, 80);
+			$data = ob_get_contents();
+			ob_end_clean();			
 		}
 		else {
 			$title = "error";
@@ -121,7 +128,7 @@
 			<div class="row bg-light px-3 py-3">
 				<div class="col-md-auto">
 					<h4>Deck Image</h4>
-					<img id="deckImage" src="icon.png" alt="..." class="img-thumbnail" width="192" height="192">
+					<img id="deckImage" src=<?php echo "'data:image/jpg;base64,".base64_encode($data)."' "; ?> alt="..." class="img-thumbnail" width="192" height="192">
 				</div>
 				<div class="col-lg-6">
 					<form method="post" enctype="multipart/form-data">
