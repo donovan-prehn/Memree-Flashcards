@@ -13,12 +13,13 @@
 ?>
 
 <?php
+		// This is called when the "Update" button for the deck is clicked
 		if (isset($_POST['updateDeck'])) {
+			// Database values
 			$servername = "localhost";
 			$username = "root";
 			$password = "";
 			$dbname = "memree_flashcards";
-			
 			
 			// Create connection
 			$conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -28,17 +29,21 @@
 				die("Connection failed: " . mysqli_connect_error());
 			}
 			
-			$userID = $_SESSION['userID'];
-			$deckID = $_POST['deckID'];
-			$title = $_POST['deckTitle'];
-			$description = $_POST['deckDescription'];
-			$imageName = $_FILES["imageFile"]["tmp_name"];
-			$imageBlob = addslashes(file_get_contents($imageName));
+			// Deck values
+			$userID = $_SESSION['userID']; // Get user ID from session
+			$deckID = $_POST['deckID']; // Get deck ID from hidden input
+			$title = $_POST['deckTitle']; // Get deck title from textfield
+			$description = $_POST['deckDescription']; // Get deck description from textfield
+			$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
+			$imageBlob = addslashes(file_get_contents($imageName)); // Converting to a blob
 			
+			// Query to update the deck title, description, and image
 			$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
-			$result = mysqli_query($conn, $sql);
+			$result = mysqli_query($conn, $sql); // Run query
 			
-			if ($result) {
+			if ($result) { // If query was 
+				// Display alert box
+				// Maybe find a nicer way to do this
 				echo '<script language="javascript">';
 				echo 'alert("Deck updated successfully")';
 				echo '</script>';
@@ -84,11 +89,11 @@
 		</nav>
 		
 		<?php
+		// Database values
 		$servername = "localhost";
 		$username = "root";
 		$password = "";
 		$dbname = "memree_flashcards";
-		
 		
 		// Create connection
 		$conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -98,18 +103,20 @@
 			die("Connection failed: " . mysqli_connect_error());
 		}
 		
-		$userID = $_SESSION['userID'];
-		$deckID = $_POST['deckID'];
-		$sql = "SELECT * FROM deck WHERE userID='$userID' and deckID='$deckID'";
-		$result = mysqli_query($conn, $sql);
+		$userID = $_SESSION['userID']; // Get user ID
+		$deckID = $_POST['deckID']; // Get Deck ID from previous page
+		$sql = "SELECT * FROM deck WHERE userID='$userID' and deckID='$deckID'"; // Get all fields from selected deck
+		$result = mysqli_query($conn, $sql); // Run query
 		
-		if ($result) {
-			$row = $result->fetch_assoc();
-			$title = $row['title'];
-			$description = $row['description'];
+		if ($result) { // If query was successful
+			$row = $result->fetch_assoc(); // Get the row
+			$title = $row['title']; // Retrieve title from row
+			$description = $row['description']; // Retrieve descriptoin from row
 			
-			$imageBlob = $row['image'];
-			$image = imagecreatefromstring($imageBlob); 
+			$imageBlob = $row['image']; // Retrieve image blob from row
+			$image = imagecreatefromstring($imageBlob);  // Create an image object out of the blob
+			
+			// Process into jpg
 			ob_start();
 			imagejpeg($image, null, 80);
 			$data = ob_get_contents();
@@ -156,16 +163,16 @@
 			
 			reader.onload = function(e) {
 				
-				var fileSize = input.files[0].size;
-				var sizeString = (fileSize/1024/1024).toFixed(2) + " MB";
-				if (fileSize/1024/1024 < 1) {
+				var fileSize = input.files[0].size; // Get size of file
+				var sizeString = (fileSize/1024/1024).toFixed(2) + " MB"; // Convert size to MB
+				if (fileSize/1024/1024 < 1) { // If MB conversion results in a value lower than 1.0, than it should be displayed in KB
 					sizeString = (fileSize/1024).toFixed(2) + " KB";
 				}
-				document.getElementById("imageDiv").innerHTML = "Size: " + sizeString;
-				document.getElementById("deckImage").src = e.target.result;
+				document.getElementById("imageDiv").innerHTML = "Size: " + sizeString; // Display size of file
+				document.getElementById("deckImage").src = e.target.result; // Change image of deck
 			}
 			
-			reader.readAsDataURL(input.files[0]);
+			reader.readAsDataURL(input.files[0]); // Read file
 			
 		}
 		</script>
