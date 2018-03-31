@@ -184,9 +184,22 @@
 		}
 		
 		// Called when user clicks update deck button
+		var counter = 0;
 		function updateDeck() {
 			document.getElementById("updateDeck").type = "submit"; // Change the form button into submit type for PHP isset requirement
 			document.getElementById("updateDeck").click(); // Simulate a click on the button
+		}
+		
+		// Called when user clicks "Add New Card" button
+		function addNewCard() {
+			document.getElementById("cards").innerHTML += '	<div class="card" style="width: 18rem;display: inline-block;"> ' +
+																'<img class="card-img-top" src="icon.png" alt="Card image cap"> ' +
+																'<div class="card-body"> ' +
+																	'<input class="form-control form-control-lg mb-2" type="text" placeholder="Question">' +
+																	'<input class="form-control form-control-lg" type="text" placeholder="'+counter+'"> ' +
+																'</div> ' +
+															'</div>';
+			counter += 1;
 		}
 		</script>
 		
@@ -196,14 +209,16 @@
 		
 		<div class="container pb-3">
 			<h1>Cards</h1>
-			<div class="card" style="width: 18rem;">
-			  <img class="card-img-top" src="icon.png" alt="Card image cap">
-			  <div class="card-body">
-				<input class="form-control form-control-lg mb-2" type="text" placeholder="Question">
-				<input class="form-control form-control-lg" type="text" placeholder="Answer">
-			  </div>
+			
+			<div id="cards"></div>
+			
+			<div class="card" style="width: 18rem;display: inline-block;">
+				<div class="card-body" align="center">
+					<input class="btn btn-primary" type="button" value="Add New Card" onclick="addNewCard()"/>
+				</div>
 			</div>
 		</div>
+		
 	</div>
 	
 	<!-------------------------------------------------------------------------------
