@@ -50,8 +50,12 @@
 		
 		// Display each card
 		echo "	<div class='card' style='width: 18rem; display: inline-block;'>
-					<img class='card-img-top' src='$imageStringQ' alt='Card image cap'>
-					<img class='card-img-top' src='$imageStringA' alt='Card image cap'>
+					<table>
+						<tr>
+							<td width='50%'><img class='card-img-top' src='$imageStringQ' alt='Card image cap'></td>
+							<td width='50%'><img class='card-img-top' src='$imageStringA' alt='Card image cap'></td>
+						</tr>
+					</table>
 						<div class='card-body'>
 							<input class='form-control form-control-lg mb-2' type='text' placeholder='$question'>
 							<input class='form-control form-control-lg' type='text' placeholder='$answer'>
