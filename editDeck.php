@@ -52,7 +52,7 @@
 				// Display alert box
 				// Maybe find a nicer way to do this
 				echo '<script language="javascript">';
-				//echo 'alert("Deck updated successfully")';
+				echo 'alert("Deck updated successfully")';
 				echo '</script>';
 			}
 			else {
@@ -191,7 +191,7 @@
 		</script>
 		
 		
-		
+		<!-- HR between deck and cards -->
 		<hr class="mt-5"/>
 		
 		<div class="container pb-3">
