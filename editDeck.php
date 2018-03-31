@@ -36,7 +36,8 @@
 			$description = $_POST['deckDescription']; // Get deck description from textfield
 			$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
 			
-			if (!$imageName) { // No image selected
+			if (!$imageName) { // No image selected, update title/description only
+				// Query to update the deck title and description only
 				$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
 			} 
 			else {
@@ -51,7 +52,7 @@
 				// Display alert box
 				// Maybe find a nicer way to do this
 				echo '<script language="javascript">';
-				echo 'alert("Deck updated successfully")';
+				//echo 'alert("Deck updated successfully")';
 				echo '</script>';
 			}
 			else {
@@ -144,7 +145,7 @@
 					<img id="deckImage" src=<?php echo "'data:image/jpg;base64,".base64_encode($data)."' "; ?> alt="..." class="img-thumbnail" width="192" height="192">
 				</div>
 				<div class="col-lg-6">
-					<form method="post" enctype="multipart/form-data">
+					<form method="post" enctype="multipart/form-data" id="deckForm" name="deckForm">
 						<div class="form-group">
 							<h4>Deck Title</h4>
 							<input type="text" name="deckTitle" class="form-control" id="inputDeckTitle" value="<?php echo $title;?>">
@@ -156,7 +157,7 @@
 						Image (Max 2 MB):
 						<input type="file" id="imageFile" name="imageFile" value="Choose Image" onchange="displayChosenImage(this)">
 						<div id="imageDiv"></div>
-						<input type="submit" name="updateDeck" value="Update">
+						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
 						<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
 					</form>
 				</div>
@@ -181,6 +182,12 @@
 			reader.readAsDataURL(input.files[0]); // Read file
 			
 		}
+		
+		// Called when user clicks update deck button
+		function updateDeck() {
+			document.getElementById("updateDeck").type = "submit"; // Change the form button into submit type for PHP isset requirement
+			document.getElementById("updateDeck").click(); // Simulate a click on the button
+		}
 		</script>
 		
 		
@@ -197,6 +204,29 @@
 			  </div>
 			</div>
 		</div>
+	</div>
+	
+	<!-------------------------------------------------------------------------------
+	// * updateDeckDialog Modal
+	-------------------------------------------------------------------------------->
+	<div class="modal fade" id="updateDeckDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Update Deck?</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			Are you sure you want to update the deck information?
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" onclick="updateDeck()">Save changes</button>
+		  </div>
+		</div>
+	  </div>
 	</div>
 	
 	

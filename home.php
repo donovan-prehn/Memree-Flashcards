@@ -97,7 +97,7 @@
 						  <p>
 						  <form action="editDeck.php" method="post">
 							<input name="deckID" value="'.$deckID.'" hidden="true"/>
-							<input type="submit" value="Edit Deck">
+							<input class="btn btn-primary" type="submit" value="Edit Deck">
 						  </form>
 						</div>
 					</div>';
