@@ -76,7 +76,6 @@
 		$sql = "SELECT * FROM deck WHERE userID='$userID'";
 		$result = mysqli_query($conn, $sql);
 		
-		$counter = 0;
 		while($row = $result->fetch_assoc()) {
 			$title = $row['title'];
 			$description = $row['description'];
@@ -95,8 +94,6 @@
 						  <a href="#" class="ui-btn">View Deck</a>
 						</div>
 					</div>';
-			
-			$counter += 1;
 		}
 		mysqli_close($conn);
 		?>
