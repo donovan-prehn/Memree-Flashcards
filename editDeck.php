@@ -288,7 +288,9 @@
 		<hr class="mt-5"/>
 		
 		<div class="container pb-3">
-			<h1>Cards</h1>
+			<h1>Cards
+				<input class='btn btn-primary' type='button' value='Add New Card' data-target='#addCardDialog' data-toggle='modal'/>
+			</h1>
 
 			<?php
 			include "php/displayCards.php"
