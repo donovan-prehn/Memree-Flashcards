@@ -1,3 +1,55 @@
+<?php 
+  session_start(); 
+
+  if (!isset($_SESSION['username'])) {
+  	$_SESSION['msg'] = "You must log in first";
+  	header('location: index.php');
+  }
+  if (isset($_GET['logout'])) {
+  	session_destroy();
+  	unset($_SESSION['username']);
+  	header("location: index.php");
+  }
+?>
+
+<?php
+		if (isset($_POST['updateDeck'])) {
+			$servername = "localhost";
+			$username = "root";
+			$password = "";
+			$dbname = "memree_flashcards";
+			
+			
+			// Create connection
+			$conn = mysqli_connect($servername, $username, $password, $dbname);
+			
+			// Check connection
+			if (!$conn) {
+				die("Connection failed: " . mysqli_connect_error());
+			}
+			
+			$userID = $_SESSION['userID'];
+			$deckID = $_POST['deckID'];
+			$title = $_POST['deckTitle'];
+			$description = $_POST['deckDescription'];
+			
+			$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
+			$result = mysqli_query($conn, $sql);
+			
+			if ($result) {
+				echo '<script language="javascript">';
+				echo 'alert("Deck updated successfully")';
+				echo '</script>';
+			}
+			else {
+				echo '<script language="javascript">';
+				echo 'alert("Deck update NOT successful")';
+				echo '</script>';
+			}
+			
+			mysqli_close($conn);
+		}
+		?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +68,7 @@
 			  <a class="nav-link" href="#">Manage Decks</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="#">Public Decks</a>
+			  <a class="nav-link" href="home.php">Public Decks</a>
 			</li>
 		</ul>
 		
@@ -28,6 +80,40 @@
 		</form>
 
 		</nav>
+		
+		<?php
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "memree_flashcards";
+		
+		
+		// Create connection
+		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		
+		// Check connection
+		if (!$conn) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+		
+		$userID = $_SESSION['userID'];
+		$deckID = $_POST['deckID'];
+		$sql = "SELECT * FROM deck WHERE userID='$userID' and deckID='$deckID'";
+		$result = mysqli_query($conn, $sql);
+		
+		if ($result) {
+			$row = $result->fetch_assoc();
+			$title = $row['title'];
+			$description = $row['description'];
+		}
+		else {
+			$title = "error";
+			$description = "error";
+		}
+		
+		mysqli_close($conn);
+		
+		?>
 		  
 		<div class="container">
 			<h1>Deck</h1>
@@ -37,19 +123,23 @@
 					<img src="icon.png" alt="..." class="img-thumbnail">
 				</div>
 				<div class="col-lg-6">
-					<form>
+					<form method="post">
 						<div class="form-group">
 							<h4>Deck Title</h4>
-							<input type="text" class="form-control" id="inputDeckTitle" placeholder="asdf">
+							<input type="text" name="deckTitle" class="form-control" id="inputDeckTitle" value="<?php echo $title;?>">
 						</div>
 						<div class="form-group">
 							<h4>Deck Description</h4>
-							<input type="textarea" class="form-control" id="inputDeckTitle" placeholder="asdf">
+							<input type="textarea" name="deckDescription" class="form-control" id="inputDeckTitle" value="<?php echo $description;?>">
 						</div>
+						<input type="submit" name="updateDeck" value="Update">
+						<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
 					</form>
 				</div>
 			</div>
 		</div>
+		
+		
 		
 		<hr class="mt-5"/>
 		

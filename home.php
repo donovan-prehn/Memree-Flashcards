@@ -79,6 +79,7 @@
 		while($row = $result->fetch_assoc()) {
 			$title = $row['title'];
 			$description = $row['description'];
+			$deckID = $row['deckID'];
 			
 			$imageBlob = $row['image'];
 			$image = imagecreatefromstring($imageBlob); 
@@ -91,7 +92,13 @@
 						<div class="card-body">
 						  <h5 class="card-title" style="color: black;">'.$title.'</h5>
 						  <p class="card-text" style="color: black;">'.$description.'</p>
+						  
 						  <a href="#" class="ui-btn">View Deck</a>
+						  <p>
+						  <form action="editDeck.php" method="post">
+							<input name="deckID" value="'.$deckID.'" hidden="true"/>
+							<input type="submit" value="Edit Deck">
+						  </form>
 						</div>
 					</div>';
 		}
