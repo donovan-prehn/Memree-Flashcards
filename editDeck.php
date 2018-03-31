@@ -35,10 +35,16 @@
 			$title = $_POST['deckTitle']; // Get deck title from textfield
 			$description = $_POST['deckDescription']; // Get deck description from textfield
 			$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
-			$imageBlob = addslashes(file_get_contents($imageName)); // Converting to a blob
 			
-			// Query to update the deck title, description, and image
-			$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
+			if (!$imageName) { // No image selected
+				$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
+			} 
+			else {
+				$imageBlob = addslashes(file_get_contents($imageName)); // Converting to a blob
+				// Query to update the deck title, description, and image
+				$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
+			}
+			
 			$result = mysqli_query($conn, $sql); // Run query
 			
 			if ($result) { // If query was 
