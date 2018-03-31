@@ -13,57 +13,120 @@
 ?>
 
 <?php
-		// This is called when the "Update" button for the deck is clicked
-		if (isset($_POST['updateDeck'])) {
-			// Database values
-			$servername = "localhost";
-			$username = "root";
-			$password = "";
-			$dbname = "memree_flashcards";
-			
-			// Create connection
-			$conn = mysqli_connect($servername, $username, $password, $dbname);
-			
-			// Check connection
-			if (!$conn) {
-				die("Connection failed: " . mysqli_connect_error());
-			}
-			
-			// Deck values
-			$userID = $_SESSION['userID']; // Get user ID from session
-			$deckID = $_POST['deckID']; // Get deck ID from hidden input
-			$title = $_POST['deckTitle']; // Get deck title from textfield
-			$description = $_POST['deckDescription']; // Get deck description from textfield
-			$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
-			
-			if (!$imageName) { // No image selected, update title/description only
-				// Query to update the deck title and description only
-				$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
-			} 
-			else {
-				$imageBlob = addslashes(file_get_contents($imageName)); // Converting to a blob
-				// Query to update the deck title, description, and image
-				$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
-			}
-			
-			$result = mysqli_query($conn, $sql); // Run query
-			
-			if ($result) { // If query was 
-				// Display alert box
-				// Maybe find a nicer way to do this
-				echo '<script language="javascript">';
-				echo 'alert("Deck updated successfully")';
-				echo '</script>';
-			}
-			else {
-				echo '<script language="javascript">';
-				echo 'alert("Deck update NOT successful")';
-				echo '</script>';
-			}
-			
-			mysqli_close($conn);
+	// This is called when the "Add Card" button is clicked
+	if (isset($_POST['addCardButton'])) {
+		// Database values
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "memree_flashcards";
+		
+		// Create connection
+		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		
+		// Check connection
+		if (!$conn) {
+			die("Connection failed: " . mysqli_connect_error());
 		}
-		?>
+		
+		// Card values
+		//$userID = $_SESSION['userID']; // Get user ID from session
+		$deckID = $_POST['deckID']; // Get deck ID from hidden input
+		$question = $_POST['newCardQ']; // Get card question from textfield
+		$answer = $_POST['newCardA']; // Get card answer from textfield
+		$imageNameQ = $_FILES["imageFileQ"]["tmp_name"]; // Get the path of image file for question
+		$imageNameA = $_FILES["imageFileA"]["tmp_name"]; // Get the path of image file for answer
+		
+		if (!$imageNameQ or !$imageNameA) { // No image for question/answer selected
+			if ($imageNameQ) { // Image selected for question
+				$imageBlobQ = addslashes(file_get_contents($imageNameQ)); // Converting to a blob
+				$sql = "INSERT INTO card (deckID, question, answer, questionImage) VALUES ('$deckID', '$question', '$answer', '$imageBlobQ');";
+			}
+			elseif ($imageNameA) { // Image selected for answer
+				$imageBlobA = addslashes(file_get_contents($imageNameA)); // Converting to a blob
+				$sql = "INSERT INTO card (deckID, question, answer, answerImage) VALUES ('$deckID', '$question', '$answer', '$imageBlobA');";
+			}
+			else { // No images selected
+				$sql = "INSERT INTO card (deckID, question, answer) VALUES ('$deckID', '$question', '$answer');";
+			}
+		} 
+		else { // Images selected for both Q/A
+			$imageBlobQ = addslashes(file_get_contents($imageNameQ)); // Converting to a blob
+			$imageBlobA = addslashes(file_get_contents($imageNameA)); // Converting to a blob
+			$sql = "INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES ('$deckID', '$question', '$answer', '$imageBlobQ', '$imageBlobA');";
+		}
+		
+		$result = mysqli_query($conn, $sql); // Run query
+		
+		if ($result) { // If query was successful
+			// Display alert box
+			// Maybe find a nicer way to do this
+			echo '<script language="javascript">';
+			echo 'alert("New card added")';
+			echo '</script>';
+		}
+		else {
+			echo '<script language="javascript">';
+			echo 'alert("Error occurred when adding card")';
+			echo '</script>';
+		}
+		
+		mysqli_close($conn);
+	}
+?>
+		
+<?php
+	// This is called when the "Update" button for the deck is clicked
+	if (isset($_POST['updateDeck'])) {
+		// Database values
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "memree_flashcards";
+		
+		// Create connection
+		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		
+		// Check connection
+		if (!$conn) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+		
+		// Deck values
+		$userID = $_SESSION['userID']; // Get user ID from session
+		$deckID = $_POST['deckID']; // Get deck ID from hidden input
+		$title = $_POST['deckTitle']; // Get deck title from textfield
+		$description = $_POST['deckDescription']; // Get deck description from textfield
+		$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
+		
+		if (!$imageName) { // No image selected, update title/description only
+			// Query to update the deck title and description only
+			$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
+		} 
+		else {
+			$imageBlob = addslashes(file_get_contents($imageName)); // Converting to a blob
+			// Query to update the deck title, description, and image
+			$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
+		}
+		
+		$result = mysqli_query($conn, $sql); // Run query
+		
+		if ($result) { // If query was successful
+			// Display alert box
+			// Maybe find a nicer way to do this
+			echo '<script language="javascript">';
+			echo 'alert("Deck updated successfully")';
+			echo '</script>';
+		}
+		else {
+			echo '<script language="javascript">';
+			echo 'alert("Deck update NOT successful")';
+			echo '</script>';
+		}
+		
+		mysqli_close($conn);
+	}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -145,7 +208,7 @@
 					<img id="deckImage" src=<?php echo "'data:image/jpg;base64,".base64_encode($data)."' "; ?> alt="..." class="img-thumbnail" width="192" height="192">
 				</div>
 				<div class="col-lg-6">
-					<form method="post" enctype="multipart/form-data" id="deckForm" name="deckForm">
+					<form method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<h4>Deck Title</h4>
 							<input type="text" name="deckTitle" class="form-control" id="inputDeckTitle" value="<?php echo $title;?>">
@@ -155,7 +218,7 @@
 							<input type="textarea" name="deckDescription" class="form-control" id="inputDeckTitle" value="<?php echo $description;?>">
 						</div>
 						Image (Max 2 MB):
-						<input type="file" id="imageFile" name="imageFile" value="Choose Image" onchange="displayChosenImage(this)">
+						<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 						<div id="imageDiv"></div>
 						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
 						<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
@@ -165,42 +228,59 @@
 		</div>
 		
 		<script>
-		function displayChosenImage(input) {
+		function displayChosenImage(input, displaySize, imgSrcId) {
 			var reader = new FileReader();
-			
-			reader.onload = function(e) {
-				
-				var fileSize = input.files[0].size; // Get size of file
-				var sizeString = (fileSize/1024/1024).toFixed(2) + " MB"; // Convert size to MB
-				if (fileSize/1024/1024 < 1) { // If MB conversion results in a value lower than 1.0, than it should be displayed in KB
-					sizeString = (fileSize/1024).toFixed(2) + " KB";
-				}
-				document.getElementById("imageDiv").innerHTML = "Size: " + sizeString; // Display size of file
-				document.getElementById("deckImage").src = e.target.result; // Change image of deck
-			}
 			
 			reader.readAsDataURL(input.files[0]); // Read file
 			
-		}
+			reader.onload = function(e) {
+				
+				if (displaySize == true) {
+					var fileSize = input.files[0].size; // Get size of file
+					var sizeString = (fileSize/1024/1024).toFixed(2) + " MB"; // Convert size to MB
+					if (fileSize/1024/1024 < 1) { // If MB conversion results in a value lower than 1.0, than it should be displayed in KB
+						sizeString = (fileSize/1024).toFixed(2) + " KB";
+					}
+					document.getElementById("imageDiv").innerHTML = "Size: " + sizeString; // Display size of file
+				}
+				
+				document.getElementById(imgSrcId).src = e.target.result; // Change image of deck
+			}
+			
+		}		
+		
 		
 		// Called when user clicks update deck button
-		var counter = 0;
 		function updateDeck() {
 			document.getElementById("updateDeck").type = "submit"; // Change the form button into submit type for PHP isset requirement
 			document.getElementById("updateDeck").click(); // Simulate a click on the button
 		}
 		
+		// Called when user clicks add card button (for submission)
+		function addCard() {
+			document.getElementById("addCardButton").click();
+		}
+		
+		//-----------------------------------------------------------------
+		// TESTING
+		//-----------------------------------------------------------------
+		/*var counter = 0;
 		// Called when user clicks "Add New Card" button
 		function addNewCard() {
 			document.getElementById("cards").innerHTML += '	<div class="card" style="width: 18rem;display: inline-block;"> ' +
-																'<img class="card-img-top" src="icon.png" alt="Card image cap"> ' +
+																
 																'<div class="card-body"> ' +
+																	
+																	'<img class="card-img-top" src="icon.png" alt="Card image cap"> '+
 																	'<input class="form-control form-control-lg mb-2" type="text" placeholder="Question">' +
+																	'<img class="card-img-top" src="icon.png" alt="Card image cap"> '+
 																	'<input class="form-control form-control-lg" type="text" placeholder="'+counter+'"> ' +
 																'</div> ' +
 															'</div>';
 			counter += 1;
-		}
+		}*/
+		
+		
 		</script>
 		
 		
@@ -209,14 +289,12 @@
 		
 		<div class="container pb-3">
 			<h1>Cards</h1>
+
+			<?php
+			include "php/displayCards.php"
+			?>
 			
-			<div id="cards"></div>
 			
-			<div class="card" style="width: 18rem;display: inline-block;">
-				<div class="card-body" align="center">
-					<input class="btn btn-primary" type="button" value="Add New Card" onclick="addNewCard()"/>
-				</div>
-			</div>
 		</div>
 		
 	</div>
@@ -239,6 +317,43 @@
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="button" class="btn btn-primary" onclick="updateDeck()">Save changes</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-------------------------------------------------------------------------------
+	// * addCardDialog Modal
+	-------------------------------------------------------------------------------->
+	<div class="modal fade" id="addCardDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Add New Card</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+		  <form method="post" enctype="multipart/form-data">
+			<table>
+				<tr>
+					<td width="50%"><img name="newCardImageQ" id="newCardImageQ" class="card-img-top" src="icon.png" alt="Card image cap"></td>
+					<td width="50%"><img name="newCardImageA" id="newCardImageA" class="card-img-top" src="icon.png" alt="Card image cap"></td>
+				</tr>
+			</table>
+			Question: <input name="imageFileQ" type="file" onchange="displayChosenImage(this,false,'newCardImageQ')"/>
+			<p>
+			Answer:&nbsp;&nbsp;&nbsp;&nbsp;<input name="imageFileA" type="file" onchange="displayChosenImage(this,false,'newCardImageA')"/>
+			<input class="form-control form-control-lg mb-2" type="text" name="newCardQ" placeholder="Question">
+			<input class="form-control form-control-lg mb-2" type="text" name="newCardA" placeholder="Answer">
+			<input type="submit" id="addCardButton" name="addCardButton" hidden="true">
+			<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
+		  </form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" onclick="addCard()">Add Card</button>
 		  </div>
 		</div>
 	  </div>
