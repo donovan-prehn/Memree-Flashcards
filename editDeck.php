@@ -32,8 +32,10 @@
 			$deckID = $_POST['deckID'];
 			$title = $_POST['deckTitle'];
 			$description = $_POST['deckDescription'];
+			$imageName = $_FILES["imageFile"]["tmp_name"];
+			$imageBlob = addslashes(file_get_contents($imageName));
 			
-			$sql = "UPDATE deck SET title='$title', description='$description' WHERE userID='$userID' and deckID='$deckID'";
+			$sql = "UPDATE deck SET title='$title', description='$description', image='$imageBlob' WHERE userID='$userID' and deckID='$deckID'";
 			$result = mysqli_query($conn, $sql);
 			
 			if ($result) {
