@@ -100,6 +100,10 @@
 							<input name="deckID" value="'.$deckID.'" hidden="true"/>
 							<input class="btn btn-primary" type="submit" value="Edit Deck">
 						  </form>
+						  <form action="study.php" method="get">
+							<input name="deckID" value="'.$deckID.'" hidden="true"/>
+							<input class="btn btn-primary" type="submit" value="Study Deck">
+						  </form>
 						</div>
 					</div>';
 		}

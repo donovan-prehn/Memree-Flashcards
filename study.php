@@ -148,6 +148,9 @@
 	
 	<script type="text/javascript">
 	
+	function mod(n, m) {
+		return ((n % m) + m) % m;
+	}
 		var index = 0;
 		var cards = <?php echo json_encode($cards);?>;
 	
@@ -172,7 +175,7 @@
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
 			updateImages();
-			index=(index+1)%cards.length;
+			index= mod((index+1),cards.length);
 		});
 		
 		
@@ -180,7 +183,7 @@
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
 			updateImages();
-			index=(index-1)%cards.length;
+			index= mod((index-1),cards.length);
 		});
 
 	</script>
