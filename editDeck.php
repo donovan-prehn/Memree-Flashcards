@@ -13,6 +13,45 @@
 ?>
 
 <?php
+	if (isset($_POST['deleteCardButton'])) {
+		// Database values
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "memree_flashcards";
+		
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		
+		// Check connection
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+		
+		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
+		
+		$stmt = $conn->prepare('DELETE FROM card WHERE cardID=?');
+		$stmt->bind_param('i', $cardID);
+		
+		if ($stmt->execute()) { // If query was successful
+			// Display alert box
+			// Maybe find a nicer way to do this
+			echo '<script language="javascript">';
+			echo 'alert("Card deleted successfully")';
+			echo '</script>';
+		}
+		else {
+			echo '<script language="javascript">';
+			echo 'alert("Delete card failed")';
+			echo '</script>';
+		}
+		
+		$stmt->close();
+		$conn->close();
+	}
+?>
+
+<?php
 	// This is called when the "Save Changes" button is clicked on edit card dialog
 	if (isset($_POST['editCardButton'])) {
 		// Database values
@@ -366,6 +405,17 @@
 			document.getElementById("cardID").value = cardID;
 			$('#editCardDialog').modal('show');
 		}
+		
+		// Called when user clicks "Delete Card" button
+		function prepareDeleteCard(cardID) {
+			document.getElementById("deleteCardID").value = cardID;
+			$('#deleteCardDialog').modal('show');
+		}
+		
+		// Called when "Yes" is clicked on delete card dialog
+		function deleteCard() {
+			document.getElementById("deleteCardButton").click(); // Simulate form submission
+		}
 		</script>
 		
 		
@@ -478,6 +528,34 @@
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="button" class="btn btn-primary" onclick="updateCard()">Save Changes</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-------------------------------------------------------------------------------
+	// * deleteCardDialog Modal
+	-------------------------------------------------------------------------------->
+	<div class="modal fade" id="deleteCardDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Delete Card?</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			Are you sure you want to delete this card?
+			<form method="post">
+				<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
+				<input id="deleteCardID" name="deleteCardID" hidden="true"/>
+				<input type="submit" id="deleteCardButton" name="deleteCardButton" hidden="true"/>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" onclick="deleteCard()">Yes</button>
 		  </div>
 		</div>
 	  </div>

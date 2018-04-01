@@ -68,6 +68,7 @@
 							<label id='answer$cardID'>$answer</label>
 						</div>
 						<div class='card-footer text-center'>
+							<input type='button' class='btn btn-secondary' value='Delete Card' onclick='prepareDeleteCard($cardID)'>
 							<input type='button' class='btn btn-primary' value='Edit Card' onclick='prepareEditCard($cardID)'>
 						</div>
 				</div>";
