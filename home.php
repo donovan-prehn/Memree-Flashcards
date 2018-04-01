@@ -92,7 +92,8 @@
 						<div class="card-body">
 						  <h5 class="card-title" style="color: black;">'.$title.'</h5>
 						  <p class="card-text" style="color: black;">'.$description.'</p>
-						  
+						</div>
+						<div class="card-footer  text-center">
 						  <a href="#" class="ui-btn">View Deck</a>
 						  <p>
 						  <form action="editDeck.php" method="post">

@@ -13,6 +13,79 @@
 ?>
 
 <?php
+	// This is called when the "Save Changes" button is clicked on edit card dialog
+	if (isset($_POST['editCardButton'])) {
+		// Database values
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "memree_flashcards";
+		
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		
+		// Check connection
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+		
+		// Card values
+		//$userID = $_SESSION['userID']; // Get user ID from session
+		//$deckID = $_POST['deckID']; // Get deck ID from hidden input
+		$cardID = $_POST['cardID']; // Get card ID from hidden input
+		$question = $_POST['editCardQ']; // Get card question from textfield
+		$answer = $_POST['editCardA']; // Get card answer from textfield
+		$imageNameQ = $_FILES["editImageFileQ"]["tmp_name"]; // Get the path of image file for question
+		$imageNameA = $_FILES["editImageFileA"]["tmp_name"]; // Get the path of image file for answer
+		
+		$null = NULL; // bind_param() requires parameters
+		
+		if (!$imageNameQ or !$imageNameA) { // No image for question/answer selected
+			if ($imageNameQ) { // Image selected for question
+				$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, questionImage=? WHERE cardID=?');
+				$stmt->bind_param('ssbi', $question, $answer, $null, $cardID);
+			
+				$stmt->send_long_data(2, file_get_contents($imageNameQ)); // Send blob of question image
+			}
+			elseif ($imageNameA) { // Image selected for answer
+				$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, answerImage=? WHERE cardID=?');
+				$stmt->bind_param('ssbi', $question, $answer, $null, $cardID);
+			
+				$stmt->send_long_data(2, file_get_contents($imageNameA)); // Send blob of question image
+			}
+			else { // No images selected
+				$stmt = $conn->prepare('UPDATE card SET question=?, answer=? WHERE cardID=?');
+				$stmt->bind_param('ssi', $question, $answer, $cardID);
+			}
+		} 
+		else { // Images selected for both Q/A
+			$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, questionImage=?, answerImage=? WHERE cardID=?');
+			$stmt->bind_param('ssbbi', $question, $answer, $null, $null, $cardID);
+			
+			$stmt->send_long_data(2, file_get_contents($imageNameQ)); // Send blob of question image
+			$stmt->send_long_data(3, file_get_contents($imageNameA)); // Send blob of answer image
+		}
+		
+		if ($stmt->execute()) { // If query was successful
+			// Display alert box
+			// Maybe find a nicer way to do this
+			echo '<script language="javascript">';
+			echo 'alert("Card edited successfully")';
+			echo '</script>';
+		}
+		else {
+			echo '<script language="javascript">';
+			echo 'alert("Edit card failed")';
+			echo '</script>';
+		}
+		
+		$stmt->close();
+		$conn->close();
+	}
+
+?>
+
+<?php
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
 		// Database values
@@ -269,9 +342,29 @@
 			document.getElementById("updateDeck").click(); // Simulate a click on the button
 		}
 		
-		// Called when user clicks add card button (for submission)
+		// Called when user clicks add card button on dialog box
 		function addCard() {
-			document.getElementById("addCardButton").click();
+			document.getElementById("addCardButton").click(); // Simulate form submission
+		}
+		
+		// Called when user clicks "save changes" on the edit card dialog box
+		function updateCard() {
+			document.getElementById("editCardButton").click(); // Simulate form submission
+		}
+		
+		// Called when user clicks "edit card" button
+		function prepareEditCard(cardID) {
+			var question = document.getElementById("question"+cardID).innerHTML; // Get question of card to edit
+			var answer = document.getElementById("answer"+cardID).innerHTML; // Get answer of card to edit
+			var imageQ = document.getElementById("imageQ"+cardID).src; // Get image of question for card
+			var imageA = document.getElementById("imageA"+cardID).src; // Get image of answer for card
+			
+			document.getElementById("editCardQ").value = question;
+			document.getElementById("editCardA").value = answer;
+			document.getElementById("editCardImageQ").src = imageQ;
+			document.getElementById("editCardImageA").src = imageA;
+			document.getElementById("cardID").value = cardID;
+			$('#editCardDialog').modal('show');
 		}
 		</script>
 		
@@ -347,6 +440,44 @@
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="button" class="btn btn-primary" onclick="addCard()">Add Card</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-------------------------------------------------------------------------------
+	// * editCardDialog Modal
+	-------------------------------------------------------------------------------->
+	<div class="modal fade" id="editCardDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Edit Card</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+		  <form method="post" enctype="multipart/form-data">
+			<table>
+				<tr>
+					<td width="50%"><img name="editCardImageQ" id="editCardImageQ" class="card-img-top" src="icon.png" alt="Card image cap"></td>
+					<td width="50%"><img name="editCardImageA" id="editCardImageA" class="card-img-top" src="icon.png" alt="Card image cap"></td>
+				</tr>
+			</table>
+			Question: <input name="editImageFileQ" type="file" onchange="displayChosenImage(this,false,'editCardImageQ')"/>
+			<p>
+			Answer:&nbsp;&nbsp;&nbsp;&nbsp;<input name="editImageFileA" type="file" onchange="displayChosenImage(this,false,'editCardImageA')"/>
+			<input class="form-control form-control-lg mb-2" type="text" name="editCardQ" id="editCardQ" >
+			<input class="form-control form-control-lg mb-2" type="text" name="editCardA" id="editCardA">
+			<input type="submit" id="editCardButton" name="editCardButton" hidden="true">
+			<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
+			<input name="cardID" id="cardID" hidden="true">
+		  </form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" onclick="updateCard()">Save Changes</button>
 		  </div>
 		</div>
 	  </div>
