@@ -172,18 +172,18 @@
 		updateImages();
 		
 		$("#nextButton").click(function(){
+			index= mod((index+1),cards.length);
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
 			updateImages();
-			index= mod((index+1),cards.length);
 		});
 		
 		
 		$("#prevButton").click(function(){
+			index= mod((index-1),cards.length);
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
 			updateImages();
-			index= mod((index-1),cards.length);
 		});
 
 	</script>
