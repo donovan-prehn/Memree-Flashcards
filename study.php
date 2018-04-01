@@ -42,7 +42,17 @@
 			$index = 0;
 			while($card = mysqli_fetch_assoc($result))
 			{
-				$cards[$index] = $card;
+				$cards[$index]['cardID'] = $card['cardID'];
+				$cards[$index]['question'] = $card['question'];
+				$cards[$index]['answer'] = $card['answer'];
+				
+				if($card["questionImage"]){
+					$cards[$index]['questionImage'] = base64_encode($card["questionImage"]);
+				}
+				if($card["answerImage"]){
+					$cards[$index]['answerImage'] = base64_encode($card["answerImage"]);
+				}
+			
 				$index=$index+1;
 			}
 			mysqli_close($conn);
@@ -100,13 +110,13 @@
 					
 					<!-- Question -->
 					<div class="pt-3 pb-3" id="question">
-						<img src="icon.png" class="rounded mx-auto d-block pb-3" alt="...">
-						<p id="questionText" >This is a question. </p>
+						<img id="questionImage" src="icon.png" class="rounded mx-auto d-block pb-3" alt="...">
+						<p id="questionText" > This is a question. </p>
 					</div>
 					
 					<!-- Answer -->
 					<div style="display:none" class="pt-3 pb-3" id="answer">
-						<img src="icon.png" class="rounded mx-auto d-block pb-3" alt="...">
+						<img id="answerImage" src="icon.png" class="rounded mx-auto d-block pb-3" alt="...">
 						<p id="answerText" >This is an answer. </p>
 					</div>
 			</div>
@@ -137,20 +147,39 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	
 	<script type="text/javascript">
+	
 		var index = 0;
 		var cards = <?php echo json_encode($cards);?>;
+	
+		function updateImages(){
+			if(cards[index]["questionImage"]){
+				$("#questionImage").attr("src","data:image/jpg;base64," + cards[index]["questionImage"]);
+			}else{
+				$("#questionImage").attr("src","");
+			}
+			if(cards[index]["answerImage"]){
+				$("#answerImage").attr("src","data:image/jpg;base64," + cards[index]["answerImage"]);
+			}else{
+				$("#answerImage").attr("src","");
+			}
+		}
 		
 		$("#questionText").text(cards[index]["question"]);
 		$("#answerText").text(cards[index]["answer"]);
+		updateImages();
 		
 		$("#nextButton").click(function(){
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
+			updateImages();
 			index=(index+1)%cards.length;
 		});
+		
+		
 		$("#prevButton").click(function(){
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
+			updateImages();
 			index=(index-1)%cards.length;
 		});
 
