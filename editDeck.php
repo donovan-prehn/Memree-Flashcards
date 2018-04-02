@@ -346,7 +346,8 @@
 						<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 						<div id="imageDiv"></div>
 						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
-						<input name="deckID" value="<?php echo $deckID;?>" hidden="true">
+						<input type="button" id="deleteDeck" name="deleteDeck" value="Delete" class="btn btn-primary" data-target="#deleteDeckDialog" data-toggle="modal">
+						<input id="deckID" name="deckID" value="<?php echo $deckID;?>" hidden="true">
 					</form>
 				</div>
 			</div>
@@ -379,6 +380,11 @@
 		function updateDeck() {
 			document.getElementById("updateDeck").type = "submit"; // Change the form button into submit type for PHP isset requirement
 			document.getElementById("updateDeck").click(); // Simulate a click on the button
+		}
+		
+		// Called when user clicks delete deck button
+		function deleteDeck() {
+			window.location = "home.php?deckID=" + document.getElementById("deckID").value;
 		}
 		
 		// Called when user clicks add card button on dialog box
@@ -453,6 +459,29 @@
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			<button type="button" class="btn btn-primary" onclick="updateDeck()">Save changes</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-------------------------------------------------------------------------------
+	// * deleteDeckDialog Modal
+	-------------------------------------------------------------------------------->
+	<div class="modal fade" id="deleteDeckDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Delete Deck?</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			Are you sure you want to delete this deck?
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" onclick="deleteDeck()">Delete</button>
 		  </div>
 		</div>
 	  </div>

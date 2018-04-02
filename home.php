@@ -56,6 +56,59 @@
 			</h3>
 		  </div>
 		<?php endif ?>
+		
+		<?php
+			// This is called when the user wants to delete deck from "editDeck" page
+			if (isset($_GET['deckID'])) {
+				// Database values
+				$servername = "localhost";
+				$username = "root";
+				$password = "";
+				$dbname = "memree_flashcards";
+				
+				// Create connection
+				$conn = new mysqli($servername, $username, $password, $dbname);
+				
+				// Check connection
+				if ($conn->connect_error) {
+					die("Connection failed: " . $conn->connect_error);
+				}
+				
+				$userID = $_SESSION['userID']; // Get user ID from session
+				$deckID = $_GET['deckID']; // Get deck ID
+				
+				$stmt = $conn->prepare('SELECT userID FROM deck WHERE deckID=?');
+				$stmt->bind_param('i', $deckID);
+				
+				$stmt->execute(); // Run query
+				$result = $stmt->get_result(); // Get the results of running the query
+				
+				if ($row = $result->fetch_assoc()) { // If there is a result from query, i.e., the deckID exists
+					if ($row['userID'] == $userID) { // User ID matches (can only delete a deck you own)
+						$stmt = $conn->prepare('DELETE FROM card WHERE deckID=?');
+						$stmt->bind_param('i', $deckID);
+						$stmt->execute();
+						
+						$stmt = $conn->prepare('DELETE FROM deck WHERE deckID=?');
+						$stmt->bind_param('i', $deckID);
+						$stmt->execute();
+					}
+					else { // User ID does not match, i.e., trying to delete someone else's deck
+						echo "<script>";
+						echo "window.alert('Error: Must be owner of deck to delete it.');";
+						echo "</script>";
+					}
+				}
+				else { // Deck doesn't exist
+					echo "<script>";
+					echo "window.alert('Error: Deck does not exist.');";
+					echo "</script>";
+				}
+				
+				$stmt->close();
+				$conn->close();
+			}
+		?>
 
 		<?php
 		$servername = "localhost";
