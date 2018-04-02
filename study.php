@@ -49,8 +49,14 @@
 				if($card["questionImage"]){
 					$cards[$index]['questionImage'] = base64_encode($card["questionImage"]);
 				}
+				else { // If no card image, use default image
+					$cards[$index]['questionImage'] = base64_encode(file_get_contents("icon.png"));
+				}
 				if($card["answerImage"]){
 					$cards[$index]['answerImage'] = base64_encode($card["answerImage"]);
+				}
+				else { // If no card image, use default image
+					$cards[$index]['answerImage'] = base64_encode(file_get_contents("icon.png"));
 				}
 			
 				$index=$index+1;
