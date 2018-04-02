@@ -23,8 +23,8 @@
 	
 	$result = $stmt->get_result(); // Get the results of running the query
 	while($row = $result->fetch_assoc()) {
-		$question = htmlentities($row['question'], ENT_QUOTES); // Retrieve question from row replacing quotes with HTMl encoding if necessary
-		$answer = htmlentities($row['answer'], ENT_QUOTES); // Retrieve answer from row replacing quotes with HTMl encoding if necessary
+		$question = $row['question']; // Retrieve question from row
+		$answer = $row['answer']; // Retrieve answer from row
 		$cardID = $row['cardID']; // Retrieve cardID for editing
 		
 		$imageBlobQ = $row['questionImage']; // Retrieve image blob of question
@@ -63,13 +63,15 @@
 					</table>
 						<div class='card-body'>
 							<!--<input class='form-control form-control-lg mb-2' type='text' placeholder='$question'>-->
+							<b>Q: </b>
 							<label id='question$cardID'>$question</label><p>
 							<!--<input class='form-control form-control-lg' type='text' placeholder='$answer'>-->
+							<b>A: </b>
 							<label id='answer$cardID'>$answer</label>
 						</div>
 						<div class='card-footer text-center'>
-							<input type='button' class='btn btn-secondary' value='Delete Card' onclick='prepareDeleteCard($cardID)'>
 							<input type='button' class='btn btn-primary' value='Edit Card' onclick='prepareEditCard($cardID)'>
+							<input type='button' class='btn btn-secondary' value='Delete Card' onclick='prepareDeleteCard($cardID)'>
 						</div>
 				</div>";
 		
