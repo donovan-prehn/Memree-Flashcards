@@ -200,13 +200,12 @@
 						  <h5 class="card-title" style="color: black;">'.$title.'</h5>
 						  <p class="card-text" style="color: black;">'.$description.'</p>
 						</div>
-						<div class="card-footer  text-center">
-						  <a href="#" class="ui-btn">View Deck</a>
-						  <p>
+						<div class="card-footer  text-center">						  
 						  <form action="editDeck.php" method="post">
 							<input name="deckID" value="'.$deckID.'" hidden="true"/>
 							<input class="btn btn-primary" type="submit" value="Edit Deck">
 						  </form>
+						  <p>
 						  <form action="study.php" method="get">
 							<input name="deckID" value="'.$deckID.'" hidden="true"/>
 							<input class="btn btn-primary" type="submit" value="Study Deck">
