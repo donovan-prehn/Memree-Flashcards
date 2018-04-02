@@ -379,7 +379,7 @@
 		// Called when user clicks update deck button
 		function updateDeck() {
 			document.getElementById("updateDeck").type = "submit"; // Change the form button into submit type for PHP isset requirement
-			document.getElementById("updateDeck").click(); // Simulate a click on the button
+			document.getElementById("updateDeck").click(); // Simulate form submission
 		}
 		
 		// Called when user clicks delete deck button

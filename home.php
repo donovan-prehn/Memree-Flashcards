@@ -58,6 +58,57 @@
 		<?php endif ?>
 		
 		<?php
+			// This is called when user submits information to create a deck
+			if (isset($_POST['createDeckButton'])) {
+				// Database values
+				$servername = "localhost";
+				$username = "root";
+				$password = "";
+				$dbname = "memree_flashcards";
+				
+				// Create connection
+				$conn = new mysqli($servername, $username, $password, $dbname);
+				
+				// Check connection
+				if ($conn->connect_error) {
+					die("Connection failed: " . $conn->connect_error);
+				}
+				
+				// Deck values
+				$userID = $_SESSION['userID']; // Get user ID from session
+				$title = $_POST['deckTitle']; // Get deck title from textfield
+				$description = $_POST['deckDescription']; // Get deck description from textfield
+				$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
+				$null = NULL; // bind_param() requires parameters
+				
+				if (!$imageName) { // No image selected, use default image
+					$imageName = "icon.png";
+				} 
+				// Query to insert new deck
+				$stmt = $conn->prepare('INSERT INTO deck (title, description, image, userID) VALUES (?, ?, ?, ?)');
+				$stmt->bind_param('ssbi', $title, $description, $null, $userID);
+				
+				$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
+				
+				if ($stmt->execute()) { // If query was successful
+					// Display alert box
+					// Maybe find a nicer way to do this
+					echo '<script language="javascript">';
+					echo 'alert("New deck created.")';
+					echo '</script>';
+				}
+				else {
+					echo '<script language="javascript">';
+					echo 'alert("Deck creation NOT successful")';
+					echo '</script>';
+				}
+				
+				$stmt->close();
+				$conn->close();
+			}
+		?>
+		
+		<?php
 			// This is called when the user wants to delete deck from "editDeck" page
 			if (isset($_GET['deckID'])) {
 				// Database values
@@ -109,6 +160,9 @@
 				$conn->close();
 			}
 		?>
+		
+		<input type="button" value="Create Deck" class="btn btn-primary" data-target="#createDeckDialog" data-toggle="modal">
+		<P>
 
 		<?php
 		$servername = "localhost";
@@ -165,6 +219,67 @@
 		<?php endif ?>
 	</div>
 	</div>
+	
+	<script>
+	function displayChosenImage(input, displaySize, imgSrcId) {
+		var reader = new FileReader();
+		
+		reader.readAsDataURL(input.files[0]); // Read file
+		
+		reader.onload = function(e) {
+			
+			if (displaySize == true) {
+				var fileSize = input.files[0].size; // Get size of file
+				var sizeString = (fileSize/1024/1024).toFixed(2) + " MB"; // Convert size to MB
+				if (fileSize/1024/1024 < 1) { // If MB conversion results in a value lower than 1.0, than it should be displayed in KB
+					sizeString = (fileSize/1024).toFixed(2) + " KB";
+				}
+				document.getElementById("imageDiv").innerHTML = "Size: " + sizeString; // Display size of file
+			}
+			
+			document.getElementById(imgSrcId).src = e.target.result; // Change image of deck
+		}
+		
+	}
+	
+	function createDeck() {
+		document.getElementById("createDeckButton").click(); // Simulate form submission
+	}
+	
+	</script>
+	
+	<!-------------------------------------------------------------------------------
+	// * createDeckDialog Modal
+	-------------------------------------------------------------------------------->
+	<div class="modal fade" id="createDeckDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Create Deck</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+		  <form method="post" enctype="multipart/form-data">
+			<img id="deckImage" class="card-img-top" src="icon.png" alt="Card image cap">
+			Image (Max 2 MB):
+			<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
+			<div id="imageDiv"></div>
+			<input class="form-control form-control-lg mb-2" type="text" name="deckTitle" placeholder="Title">
+			<input class="form-control form-control-lg mb-2" type="text" name="deckDescription" placeholder="Description">
+			<input type="submit" id="createDeckButton" name="createDeckButton" hidden="true">
+		  </form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" onclick="createDeck()">Create Deck</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-- Bootstrap -->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
