@@ -182,6 +182,9 @@
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
 			updateImages();
+			// Make sure to show the question first when going to next card
+			$('#question').show();
+			$('#answer').hide();
 		});
 		
 		
@@ -190,6 +193,9 @@
 			$("#questionText").text(cards[index]["question"]);
 			$("#answerText").text(cards[index]["answer"]);
 			updateImages();
+			// Make sure to show the question first when going to previous card
+			$('#question').show();
+			$('#answer').hide();
 		});
 
 	</script>
