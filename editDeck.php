@@ -346,7 +346,7 @@
 						<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 						<div id="imageDiv"></div>
 						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
-						<input type="button" id="deleteDeck" name="deleteDeck" value="Delete" class="btn btn-primary" data-target="#deleteDeckDialog" data-toggle="modal">
+						<input type="button" id="deleteDeck" name="deleteDeck" value="Delete" class="btn btn-secondary" data-target="#deleteDeckDialog" data-toggle="modal">
 						<input id="deckID" name="deckID" value="<?php echo $deckID;?>" hidden="true">
 					</form>
 				</div>

@@ -109,8 +109,8 @@
 		?>
 		
 		<?php
-			// This is called when the user wants to delete deck from "editDeck" page
-			if (isset($_GET['deckID'])) {
+			// This is called when the user wants to delete deck (either from home.php or editDeck.php)
+			if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
 				// Database values
 				$servername = "localhost";
 				$username = "root";
@@ -126,7 +126,13 @@
 				}
 				
 				$userID = $_SESSION['userID']; // Get user ID from session
-				$deckID = $_GET['deckID']; // Get deck ID
+				if (isset($_GET['deckID'])) {
+					$deckID = $_GET['deckID']; // Get deck ID from $_GET (editDeck.php delete button)
+				}
+				else {
+					$deckID = $_POST['deckID']; // Get deck ID from $_POST (home.php delete button)
+				}
+				
 				
 				$stmt = $conn->prepare('SELECT userID FROM deck WHERE deckID=?');
 				$stmt->bind_param('i', $deckID);
@@ -200,16 +206,22 @@
 						  <h5 class="card-title" style="color: black;">'.$title.'</h5>
 						  <p class="card-text" style="color: black;">'.$description.'</p>
 						</div>
-						<div class="card-footer  text-center">						  
-						  <form action="editDeck.php" method="post">
-							<input name="deckID" value="'.$deckID.'" hidden="true"/>
-							<input class="btn btn-primary" type="submit" value="Edit Deck">
-						  </form>
-						  <p>
-						  <form action="study.php" method="get">
-							<input name="deckID" value="'.$deckID.'" hidden="true"/>
-							<input class="btn btn-primary" type="submit" value="Study Deck">
-						  </form>
+						<div class="card-footer  text-center">	
+							<form action="study.php" method="get">
+								<input name="deckID" value="'.$deckID.'" hidden="true"/>
+								<input class="btn btn-primary" type="submit" value="Study Deck">
+							</form>
+							<p>
+							<form action="editDeck.php" method="post" style="display: inline-block;">
+								<input name="deckID" value="'.$deckID.'" hidden="true"/>
+								<input class="btn btn-primary" type="submit" value="Edit Deck">
+							</form>
+							<form action="" method="post" style="display: inline-block;">
+								<input name="deckID" value="'.$deckID.'" hidden="true"/>
+								<input class="btn btn-secondary" type="submit" value="Delete Deck">
+							</form>
+						  
+						  
 						</div>
 					</div>';
 		}
