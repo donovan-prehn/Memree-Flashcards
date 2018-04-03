@@ -104,15 +104,20 @@
 		
 		<div class="row align-items-center justify-content-md-center mt-5">
 		
+			<!-- Message that tells user they have no cards -->
+			<div id="noCardsMessage">
+				<h3>There are no cards in this deck yet.</h3>
+			</div>
+		
 			<!-- Previous Button -->
-			<div class="col-md-auto">
+			<div class="col-md-auto" id="previousButtonDiv">
 					<button id="prevButton" style="background-color:transparent;" class="btn" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="question answer">
 						<span style="font-size:6em;color:blue;" class="fas fa-caret-left" aria-hidden="true"></span>
 					</button>
 			</div>
 			
 			<!-- Card -->
-			<div class="col-lg-7 text-center border text-dark bg-light">
+			<div class="col-lg-7 text-center border text-dark bg-light" id="cardDiv">
 					
 					<!-- Question -->
 					<div class="pt-3 pb-3" id="question">
@@ -128,7 +133,7 @@
 			</div>
 			
 			<!-- Next Button -->
-			<div class="col-md-auto">
+			<div class="col-md-auto" id="nextButtonDiv">
 					<button id="nextButton" style="background-color:transparent;" class="btn" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="question answer">
 						<span style="font-size:6em;color:blue;" class="fas fa-caret-right" aria-hidden="true"></span>
 					</button>
@@ -137,7 +142,7 @@
 		</div>
 		
 		<!-- Flip Button -->
-		<div class="col-md-auto mt-3">
+		<div class="col-md-auto mt-3" id="flipButtonDiv">
 			<div class="text-center">
 				<button id="flipButton" class="btn btn-primary" onclick="$('#answer').toggle();$('#question').toggle();" >Flip Card</button> 
 			</div>
@@ -173,9 +178,23 @@
 			}
 		}
 		
-		$("#questionText").text(cards[index]["question"]);
-		$("#answerText").text(cards[index]["answer"]);
-		updateImages();
+		if (cards.length > 0) { // If there are cards, update image and Q/A
+			$("#questionText").text(cards[index]["question"]);
+			$("#answerText").text(cards[index]["answer"]);
+			updateImages();
+			
+			// Hide "no cards" message
+			$("#noCardsMessage").hide();
+		} else {
+			// Hide elements since no cards
+			$("#cardDiv").hide();
+			$("#previousButtonDiv").hide();
+			$("#nextButtonDiv").hide();
+			$("#flipButtonDiv").hide();
+			
+			// Display "no cards" message
+			$("#noCardsMessage").show();
+		}
 		
 		$("#nextButton").click(function(){
 			index= mod((index+1),cards.length);

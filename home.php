@@ -170,7 +170,8 @@
 		<input type="button" value="Create Deck" class="btn btn-primary" data-target="#createDeckDialog" data-toggle="modal">
 		<P>
 
-		<?php
+		<?php // Displaying decks
+		// Database values
 		$servername = "localhost";
 		$username = "root";
 		$password = "";
@@ -178,28 +179,39 @@
 		
 		
 		// Create connection
-		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		$conn = new mysqli($servername, $username, $password, $dbname);
 		
 		// Check connection
 		if (!$conn) {
 			die("Connection failed: " . mysqli_connect_error());
 		}
 		
-		$userID = $_SESSION['userID'];
-		$sql = "SELECT * FROM deck WHERE userID='$userID'";
-		$result = mysqli_query($conn, $sql);
+		$userID = $_SESSION['userID']; // Get user ID
 		
-		while($row = $result->fetch_assoc()) {
-			$title = $row['title'];
-			$description = $row['description'];
-			$deckID = $row['deckID'];
+		$stmt = $conn->prepare('SELECT * FROM deck WHERE userID=?');
+		$stmt->bind_param('i', $userID);
+		
+		$stmt->execute(); // Run query
+		$result = $stmt->get_result(); // Get the results of running the query
+		
+		if ($result->num_rows == 0) { // If user does not have any decks
+			echo "<h3>You have no decks yet.</h3>";
+		}
+		else { // User has 1 or more decks
+			while($row = $result->fetch_assoc()) { // Go through each row and fetch deck data
+			$title = $row['title']; // Retrieve deck title
+			$description = $row['description']; // Retrieve deck description
+			$deckID = $row['deckID']; // Retrieve deck ID
 			
-			$imageBlob = $row['image'];
-			$image = imagecreatefromstring($imageBlob); 
+			$imageBlob = $row['image']; // Retrieve deck image blob
+			$image = imagecreatefromstring($imageBlob); // Create an image object out of the blob
+			// Process into jpg
 			ob_start();
 			imagejpeg($image, null, 80);
 			$data = ob_get_contents();
 			ob_end_clean();
+			
+			// Display the deck in a Bootstrap card class format
 			echo '	<div class="card" style="width: 18rem;display: inline-block;">
 						<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
 						<div class="card-body">
@@ -226,7 +238,10 @@
 						</div>
 					</div>';
 		}
-		mysqli_close($conn);
+		}
+		
+		$stmt->close();
+		$conn->close();
 		?>
 		<?php endif ?>
 	</div>
@@ -254,16 +269,16 @@
 		
 	}
 	
-	function createDeck() {
+	function createDeck() { // Called when user clicks "create deck" after entering information
 		document.getElementById("createDeckButton").click(); // Simulate form submission
 	}
 	
-	function showConfirmDialog(deckID) {
+	function showConfirmDialog(deckID) { // Called when user clicks delete on a deck
 		document.getElementById("deleteDeckID").value = deckID; // Set the ID of the deck to delete
 		$('#deleteDeckDialog').modal('show'); // Show the delete deck confirmation dialog
 	}
 	
-	function deleteDeck() {
+	function deleteDeck() { // Called when user confirms they want to delete the deck
 		var deckID = document.getElementById("deleteDeckID").value; // Get the ID of the deck to delete
 		document.getElementById("deleteDeckSubmit"+deckID).click(); // Simulate form submission
 	}
