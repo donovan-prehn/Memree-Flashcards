@@ -169,7 +169,8 @@
 		
 		<input type="button" value="Create Deck" class="btn btn-primary" data-target="#createDeckDialog" data-toggle="modal">
 		<P>
-
+		
+		<div class="row">
 		<?php // Displaying decks
 		// Database values
 		$servername = "localhost";
@@ -244,6 +245,8 @@
 		$conn->close();
 		?>
 		<?php endif ?>
+		
+		</div>
 	</div>
 	</div>
 	
