@@ -217,7 +217,7 @@
 			ob_end_clean();
 			
 			// Display the deck in a Bootstrap card class format
-			echo '	<div class="card" style="width: 18rem;display: inline-block;">
+			echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
 						<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
 						<div class="card-body">
 						  <h5 class="deckTitle" style="color: black;">'.$title.'</h5>
