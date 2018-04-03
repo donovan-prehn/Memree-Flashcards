@@ -47,6 +47,9 @@
 		
 		// Display each card
 		echo "	<div class='card' style='width: 18rem; display: inline-block;'>
+					<button type='button' class='close' aria-label='Close' style='position:absolute; right:0px; top:-10px;' onclick='prepareDeleteCard($cardID)'>
+							  <span aria-hidden='true'><font color='red' size='8'>&times;</font></span>
+							</button>
 					<table>
 						<tr>
 							<td width='50%'><img height='141' id='imageQ$cardID' src='$imageStringQ' alt='Card image cap'></td>
