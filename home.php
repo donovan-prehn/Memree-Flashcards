@@ -11,247 +11,228 @@
   	header("location: index.php");
   }
 ?>
-<style>
-<?php include 'css/main.css'; ?>
-</style>
 
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Home</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 	 <!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 	<div class="container">
-	<nav class="navbar navbar-expand-lg navbar-dark bg-primary mt-3 mb-3">
-	<a class="navbar-brand" href="#">Memree Flashcards</a>
 	
-	<ul class="navbar-nav">
-		<li class="nav-item">
-		  <a class="nav-link" href="#">Manage Decks</a>
-		</li>
-		<li class="nav-item">
-		  <a class="nav-link" href="#">Public Decks</a>
-		</li>
-	</ul>
-	
-	<!-- Logged in as / Logout Button -->
-	<form class="form-inline ml-auto" action="index.php?logout='1'">
-		<span class="navbar-text mr-1">
-				<?php  if (isset($_SESSION['username'])) : ?>
-				<?php echo $_SESSION['username']; ?>
-		</span>
-		<button class="btn btn-primary" type="submit">Logout</button>
-	</form>
-
-	</nav>
+		<?php include 'nav-bar.php'; ?>
 	  
-	<div class="content">
-		<!-- notification message -->
-		<?php if (isset($_SESSION['success'])) : ?>
-		  <div class="error success" >
-			<h3>
-			  <?php 
-				echo $_SESSION['success']; 
-				unset($_SESSION['success']);
-			  ?>
-			</h3>
-		  </div>
-		<?php endif ?>
+		<div class="content">
 		
-		<?php
-			// This is called when user submits information to create a deck
-			if (isset($_POST['createDeckButton'])) {
-				// Database values
-				$servername = "localhost";
-				$username = "root";
-				$password = "";
-				$dbname = "memree_flashcards";
-				
-				// Create connection
-				$conn = new mysqli($servername, $username, $password, $dbname);
-				
-				// Check connection
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				}
-				
-				// Deck values
-				$userID = $_SESSION['userID']; // Get user ID from session
-				$title = $_POST['deckTitle']; // Get deck title from textfield
-				$description = $_POST['deckDescription']; // Get deck description from textfield
-				$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
-				$null = NULL; // bind_param() requires parameters
-				
-				if (!$imageName) { // No image selected, use default image
-					$imageName = "icon.png";
-				} 
-				// Query to insert new deck
-				$stmt = $conn->prepare('INSERT INTO deck (title, description, image, userID) VALUES (?, ?, ?, ?)');
-				$stmt->bind_param('ssbi', $title, $description, $null, $userID);
-				
-				$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
-				
-				if ($stmt->execute()) { // If query was successful
-					// Display alert box
-					// Maybe find a nicer way to do this
-					echo '<script language="javascript">';
-					echo 'alert("New deck created.")';
-					echo '</script>';
-				}
-				else {
-					echo '<script language="javascript">';
-					echo 'alert("Deck creation NOT successful")';
-					echo '</script>';
-				}
-				
-				$stmt->close();
-				$conn->close();
-			}
-		?>
-		
-		<?php
-			// This is called when the user wants to delete deck (either from home.php or editDeck.php)
-			if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
-				// Database values
-				$servername = "localhost";
-				$username = "root";
-				$password = "";
-				$dbname = "memree_flashcards";
-				
-				// Create connection
-				$conn = new mysqli($servername, $username, $password, $dbname);
-				
-				// Check connection
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				}
-				
-				$userID = $_SESSION['userID']; // Get user ID from session
-				if (isset($_GET['deckID'])) {
-					$deckID = $_GET['deckID']; // Get deck ID from $_GET (editDeck.php delete button)
-				}
-				else {
-					$deckID = $_POST['deckID']; // Get deck ID from $_POST (home.php delete button)
-				}
-				
-				
-				$stmt = $conn->prepare('SELECT userID FROM deck WHERE deckID=?');
-				$stmt->bind_param('i', $deckID);
-				
-				$stmt->execute(); // Run query
-				$result = $stmt->get_result(); // Get the results of running the query
-				
-				if ($row = $result->fetch_assoc()) { // If there is a result from query, i.e., the deckID exists
-					if ($row['userID'] == $userID) { // User ID matches (can only delete a deck you own)
-						$stmt = $conn->prepare('DELETE FROM card WHERE deckID=?');
-						$stmt->bind_param('i', $deckID);
-						$stmt->execute();
-						
-						$stmt = $conn->prepare('DELETE FROM deck WHERE deckID=?');
-						$stmt->bind_param('i', $deckID);
-						$stmt->execute();
+			<!-- notification message -->
+			<?php if (isset($_SESSION['success'])) : ?>
+			  <div class="error success" >
+				<h3>
+				  <?php 
+					echo $_SESSION['success']; 
+					unset($_SESSION['success']);
+				  ?>
+				</h3>
+			  </div>
+			<?php endif ?>
+			
+			<!-- createDeck -->
+			<?php
+				// This is called when user submits information to create a deck
+				if (isset($_POST['createDeckButton'])) {
+					// Database values
+					$servername = "localhost";
+					$username = "root";
+					$password = "";
+					$dbname = "memree_flashcards";
+					
+					// Create connection
+					$conn = new mysqli($servername, $username, $password, $dbname);
+					
+					// Check connection
+					if ($conn->connect_error) {
+						die("Connection failed: " . $conn->connect_error);
 					}
-					else { // User ID does not match, i.e., trying to delete someone else's deck
+					
+					// Deck values
+					$userID = $_SESSION['userID']; // Get user ID from session
+					$title = $_POST['deckTitle']; // Get deck title from textfield
+					$description = $_POST['deckDescription']; // Get deck description from textfield
+					$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
+					$null = NULL; // bind_param() requires parameters
+					
+					if (!$imageName) { // No image selected, use default image
+						$imageName = "icon.png";
+					} 
+					// Query to insert new deck
+					$stmt = $conn->prepare('INSERT INTO deck (title, description, image, userID) VALUES (?, ?, ?, ?)');
+					$stmt->bind_param('ssbi', $title, $description, $null, $userID);
+					
+					$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
+					
+					if ($stmt->execute()) { // If query was successful
+						// Display alert box
+						// Maybe find a nicer way to do this
+						echo '<script language="javascript">';
+						echo 'alert("New deck created.")';
+						echo '</script>';
+					}
+					else {
+						echo '<script language="javascript">';
+						echo 'alert("Deck creation NOT successful")';
+						echo '</script>';
+					}
+					
+					$stmt->close();
+					$conn->close();
+				}
+			?>
+			
+			<!-- deleteDeck -->
+			<?php
+				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
+				if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
+					// Database values
+					$servername = "localhost";
+					$username = "root";
+					$password = "";
+					$dbname = "memree_flashcards";
+					
+					// Create connection
+					$conn = new mysqli($servername, $username, $password, $dbname);
+					
+					// Check connection
+					if ($conn->connect_error) {
+						die("Connection failed: " . $conn->connect_error);
+					}
+					
+					$userID = $_SESSION['userID']; // Get user ID from session
+					if (isset($_GET['deckID'])) {
+						$deckID = $_GET['deckID']; // Get deck ID from $_GET (editDeck.php delete button)
+					}
+					else {
+						$deckID = $_POST['deckID']; // Get deck ID from $_POST (home.php delete button)
+					}
+					
+					
+					$stmt = $conn->prepare('SELECT userID FROM deck WHERE deckID=?');
+					$stmt->bind_param('i', $deckID);
+					
+					$stmt->execute(); // Run query
+					$result = $stmt->get_result(); // Get the results of running the query
+					
+					if ($row = $result->fetch_assoc()) { // If there is a result from query, i.e., the deckID exists
+						if ($row['userID'] == $userID) { // User ID matches (can only delete a deck you own)
+							$stmt = $conn->prepare('DELETE FROM card WHERE deckID=?');
+							$stmt->bind_param('i', $deckID);
+							$stmt->execute();
+							
+							$stmt = $conn->prepare('DELETE FROM deck WHERE deckID=?');
+							$stmt->bind_param('i', $deckID);
+							$stmt->execute();
+						}
+						else { // User ID does not match, i.e., trying to delete someone else's deck
+							echo "<script>";
+							echo "window.alert('Error: Must be owner of deck to delete it.');";
+							echo "</script>";
+						}
+					}
+					else { // Deck doesn't exist
 						echo "<script>";
-						echo "window.alert('Error: Must be owner of deck to delete it.');";
+						echo "window.alert('Error: Deck does not exist.');";
 						echo "</script>";
 					}
+					
+					$stmt->close();
+					$conn->close();
 				}
-				else { // Deck doesn't exist
-					echo "<script>";
-					echo "window.alert('Error: Deck does not exist.');";
-					echo "</script>";
-				}
-				
-				$stmt->close();
-				$conn->close();
+			?>
+			
+			<input type="button" value="Create Deck" class="btn btn-primary" data-target="#createDeckDialog" data-toggle="modal">
+			
+			<div class="row">
+			
+			<!-- display decks on home.php -->
+			<?php // Displaying decks
+			
+			// Database values
+			$servername = "localhost";
+			$username = "root";
+			$password = "";
+			$dbname = "memree_flashcards";
+			
+			// Create connection
+			$conn = new mysqli($servername, $username, $password, $dbname);
+			
+			// Check connection
+			if (!$conn) {
+				die("Connection failed: " . mysqli_connect_error());
 			}
-		?>
-		
-		<input type="button" value="Create Deck" class="btn btn-primary" data-target="#createDeckDialog" data-toggle="modal">
-		<P>
-		
-		<div class="row">
-		<?php // Displaying decks
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
-		
-		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if (!$conn) {
-			die("Connection failed: " . mysqli_connect_error());
-		}
-		
-		$userID = $_SESSION['userID']; // Get user ID
-		
-		$stmt = $conn->prepare('SELECT * FROM deck WHERE userID=?');
-		$stmt->bind_param('i', $userID);
-		
-		$stmt->execute(); // Run query
-		$result = $stmt->get_result(); // Get the results of running the query
-		
-		if ($result->num_rows == 0) { // If user does not have any decks
-			echo "<h3>You have no decks yet.</h3>";
-		}
-		else { // User has 1 or more decks
-			while($row = $result->fetch_assoc()) { // Go through each row and fetch deck data
-			$title = $row['title']; // Retrieve deck title
-			$description = $row['description']; // Retrieve deck description
-			$deckID = $row['deckID']; // Retrieve deck ID
 			
-			$imageBlob = $row['image']; // Retrieve deck image blob
-			$image = imagecreatefromstring($imageBlob); // Create an image object out of the blob
-			// Process into jpg
-			ob_start();
-			imagejpeg($image, null, 80);
-			$data = ob_get_contents();
-			ob_end_clean();
+			$userID = $_SESSION['userID']; // Get user ID
 			
-			// Display the deck in a Bootstrap card class format
-			echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
-						<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="deckTitle" style="color: black;">'.$title.'</h5>
-						  <p class="cardDescription" style="color: black;">'.$description.'</p>
-						</div>
-						<div class="card-footer  text-center">	
-							<form action="study.php" method="get">
-								<input name="deckID" value="'.$deckID.'" hidden="true"/>
-								<input class="btn btn-primary" type="submit" value="Study Deck">
-							</form>
-							<p>
-							<form action="editDeck.php" method="post" style="display: inline-block;">
-								<input name="deckID" value="'.$deckID.'" hidden="true"/>
-								<input class="btn btn-primary" type="submit" value="Edit Deck">
-							</form>
-							<form action="" method="post" style="display: inline-block;">
-								<input name="deckID" value="'.$deckID.'" hidden="true"/>
-								<input type="submit" id="deleteDeckSubmit'.$deckID.'" hidden="true">
-								<input class="btn btn-secondary" type="button" onclick="showConfirmDialog('.$deckID.')" value="Delete Deck">
-							</form>
-						  
-						  
-						</div>
-					</div>';
-		}
-		}
-		
-		$stmt->close();
-		$conn->close();
-		?>
-		<?php endif ?>
-		
+			$stmt = $conn->prepare('SELECT * FROM deck WHERE userID=?');
+			$stmt->bind_param('i', $userID);
+			
+			$stmt->execute(); // Run query
+			$result = $stmt->get_result(); // Get the results of running the query
+			
+			if ($result->num_rows == 0) { // If user does not have any decks
+				echo "<h3>You have no decks yet.</h3>";
+			}
+			else { // User has 1 or more decks
+				while($row = $result->fetch_assoc()) { // Go through each row and fetch deck data
+				$title = $row['title']; // Retrieve deck title
+				$description = $row['description']; // Retrieve deck description
+				$deckID = $row['deckID']; // Retrieve deck ID
+				
+				$imageBlob = $row['image']; // Retrieve deck image blob
+				$image = imagecreatefromstring($imageBlob); // Create an image object out of the blob
+				// Process into jpg
+				ob_start();
+				imagejpeg($image, null, 80);
+				$data = ob_get_contents();
+				ob_end_clean();
+				
+				// Display the deck in a Bootstrap card class format
+				echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
+							<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
+							<div class="card-body">
+							  <h5 class="deckTitle" style="color: black;">'.$title.'</h5>
+							  <p class="cardDescription" style="color: black;">'.$description.'</p>
+							</div>
+							<div class="card-footer  text-center">	
+								<form action="study.php" method="get">
+									<input name="deckID" value="'.$deckID.'" hidden="true"/>
+									<input class="btn btn-primary" type="submit" value="Study Deck">
+								</form>
+								<p>
+								<form action="editDeck.php" method="post" style="display: inline-block;">
+									<input name="deckID" value="'.$deckID.'" hidden="true"/>
+									<input class="btn btn-primary" type="submit" value="Edit Deck">
+								</form>
+								<form action="" method="post" style="display: inline-block;">
+									<input name="deckID" value="'.$deckID.'" hidden="true"/>
+									<input type="submit" id="deleteDeckSubmit'.$deckID.'" hidden="true">
+									<input class="btn btn-secondary" type="button" onclick="showConfirmDialog('.$deckID.')" value="Delete Deck">
+								</form>
+							  
+							  
+							</div>
+						</div>';
+			}
+			}
+			
+			$stmt->close();
+			$conn->close();
+			?>
+			
+			</div>
 		</div>
-	</div>
 	</div>
 	
 	<script>

@@ -14,10 +14,6 @@
   
   
 ?>
-<style>
-<?php include 'css/main.css'; ?>
-</style>
-
 <?php
 
 		if (isset($_GET['deckID'])) {
@@ -77,7 +73,7 @@
 <head>
 	<title>Home</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 	 <!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
@@ -87,27 +83,7 @@
 
 	<div class="container">
 	
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary mt-3 mb-3">
-		<a class="navbar-brand" href="#">Memree Flashcards</a>
-		
-		<ul class="navbar-nav">
-			<li class="nav-item">
-			  <a class="nav-link" href="#">Manage Decks</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="home.php">Public Decks</a>
-			</li>
-		</ul>
-		
-		<!-- Logged in as / Logout Button -->
-		<form class="form-inline ml-auto" action="index.php?logout='1'">
-			<span class="navbar-text mr-1">
-			</span>
-			<button class="btn btn-primary" type="submit">Logout</button>
-		</form>
-
-		</nav>
-		
+		<?php include 'nav-bar.php'; ?>
 		
 		<div class="row align-items-center justify-content-md-center mt-5">
 		
