@@ -269,7 +269,7 @@
 </head>
 <body>
 	<div class="container">
-	<?php include 'nav-bar.php'; ?>
+	<?php include 'php/nav-bar.php'; ?>
 		
 		<?php
 		// Database values
