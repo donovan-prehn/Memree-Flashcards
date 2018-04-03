@@ -82,16 +82,7 @@
 		
 					
 	}
-	// This is the card with 'Add New Card' button
-	echo "	<div class='card' style='width: 18rem;display: inline-block;'>
-				<div class='card-body'>
-					<br><br><br><br><br><br><br><br><br>
-				</div>
-				<div class='card-footer text-center'>
-					<input class='btn btn-primary' type='button' value='Add New Card' data-target='#addCardDialog' data-toggle='modal'/>
-				</div>
-			</div>";
-	
+
 	$stmt->close();
 	$conn->close();
 				
