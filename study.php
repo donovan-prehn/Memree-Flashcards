@@ -19,19 +19,20 @@
 			
 			include 'php/db_connection.php';
 			
-			$userID = $_SESSION['userID'];
-			$sql = "SELECT * FROM card WHERE deckID='$deckID'";
-			$result = mysqli_query($conn, $sql);
+			$stmt = $conn->prepare('SELECT * FROM card WHERE deckID=?'); // Get all fields from selected card
+			$stmt->bind_param('i', $deckID);
+			$stmt->execute(); // Run query
+			
+			$result = $stmt->get_result(); // Get the results of running the query
 			
 			if (!$result) {
-			echo '<script language="javascript">';
+				echo '<script language="javascript">';
 				echo 'alert("Unable to find deck.")';
 				echo '</script>';
 			}
 			$cards = array();
 			$index = 0;
-			while($card = mysqli_fetch_assoc($result))
-			{
+			while($card = $result->fetch_assoc()) {
 				$cards[$index]['cardID'] = $card['cardID'];
 				$cards[$index]['question'] = $card['question'];
 				$cards[$index]['answer'] = $card['answer'];
@@ -48,10 +49,11 @@
 				else { // If no card image, use default image
 					$cards[$index]['answerImage'] = base64_encode(file_get_contents("icon.png"));
 				}
-			
+
 				$index=$index+1;
 			}
-			mysqli_close($conn);
+			$stmt->close();
+			$conn->close();
 		}
 ?>
 		

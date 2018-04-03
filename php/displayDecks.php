@@ -52,7 +52,6 @@
 								<form action="" method="post" style="display: inline-block;">
 									<input name="deckID" value="'.$deckID.'" hidden="true"/>
 									<input type="submit" id="deleteDeckSubmit'.$deckID.'" hidden="true">
-									<input class="btn btn-secondary" type="button" onclick="showConfirmDialog('.$deckID.')" value="Delete Deck">
 								</form>
 							  
 							  
