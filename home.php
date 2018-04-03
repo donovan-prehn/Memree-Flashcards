@@ -306,7 +306,7 @@
 		  </div>
 		  <div class="modal-body">
 		  <form method="post" enctype="multipart/form-data">
-			<img id="deckImage" class="card-img-top" src="icon.png" alt="Card image cap">
+			<img id="deckImage" height="350" class="card-img-top" src="icon.png" alt="Card image cap">
 			Image (Max 2 MB):
 			<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 			<div id="imageDiv"></div>

@@ -61,8 +61,8 @@
 		echo "	<div class='card' style='width: 18rem; display: inline-block;'>
 					<table>
 						<tr>
-							<td width='50%'><img id='imageQ$cardID' class='card-img-top' src='$imageStringQ' alt='Card image cap'></td>
-							<td width='50%'><img id='imageA$cardID' class='card-img-top' src='$imageStringA' alt='Card image cap'></td>
+							<td width='50%'><img height='141' id='imageQ$cardID' src='$imageStringQ' alt='Card image cap'></td>
+							<td width='50%'><img height='141' id='imageA$cardID' src='$imageStringA' alt='Card image cap'></td>
 						</tr>
 					</table>
 						<div class='card-body'>
