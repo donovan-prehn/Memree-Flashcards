@@ -14,7 +14,19 @@
 
 <?php
 	if (isset($_POST['deleteCardButton'])) {
-		include 'php/db_connection.php';
+		// Database values
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "memree_flashcards";
+		
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		
+		// Check connection
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
 		
 		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
 		
@@ -209,16 +221,23 @@
 		$description = $_POST['deckDescription']; // Get deck description from textfield
 		$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
 		
+		$madePublic = isset($_POST['publicCheck']); // Check to see value for the checkbox 
+		
+		if($madePublic)
+			$isPublic = 1;
+		else
+			$isPublic = 0;
+		
 		if (!$imageName) { // No image selected, update title/description only
 			// Query to update the deck title and description only
-			$stmt = $conn->prepare('UPDATE deck SET title=?, description=? WHERE userID=? and deckID=?');
-			$stmt->bind_param('ssii', $title, $description, $userID, $deckID);
+			$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, public=? WHERE userID=? and deckID=?');
+			$stmt->bind_param('ssiii', $title, $description, $isPublic, $userID, $deckID);
 		} 
 		else {
 			$null = NULL; // bind_param() requires parameters
 			// Query to update the deck title, description, and image
-			$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, image=? WHERE userID=? and deckID=?');
-			$stmt->bind_param('ssbii', $title, $description, $null, $userID, $deckID);
+			$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, image=?, public=?  WHERE userID=? and deckID=?');
+			$stmt->bind_param('ssbiii', $title, $description, $null, $isPublic, $userID, $deckID);
 			
 			$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
 		}
@@ -250,26 +269,7 @@
 </head>
 <body>
 	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary mt-3 mb-3">
-		<a class="navbar-brand" href="#">Memree Flashcards</a>
-		
-		<ul class="navbar-nav">
-			<li class="nav-item">
-			  <a class="nav-link" href="#">Manage Decks</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="home.php">Public Decks</a>
-			</li>
-		</ul>
-		
-		<!-- Logged in as / Logout Button -->
-		<form class="form-inline ml-auto" action="index.php?logout='1'">
-			<span class="navbar-text mr-1">
-			</span>
-			<button class="btn btn-primary" type="submit">Logout</button>
-		</form>
-
-		</nav>
+	<?php include 'nav-bar.php'; ?>
 		
 		<?php
 		// Database values
@@ -295,6 +295,7 @@
 			$row = $result->fetch_assoc(); // Get the row
 			$title = $row['title']; // Retrieve title from row
 			$description = $row['description']; // Retrieve descriptoin from row
+			$madePublic = $row['public'];	//retreive the value in the public row
 			
 			$imageBlob = $row['image']; // Retrieve image blob from row
 			$image = imagecreatefromstring($imageBlob);  // Create an image object out of the blob
@@ -333,6 +334,9 @@
 						Image (Max 2 MB):
 						<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 						<div id="imageDiv"></div>
+						<input id="publicCheck" name="publicCheck" type="checkbox" <?php if($madePublic) echo 'checked'; ?>>
+						<label for="publicCheck">Public</label>
+						<br>
 						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
 						<input type="button" id="deleteDeck" name="deleteDeck" value="Delete" class="btn btn-secondary" data-target="#deleteDeckDialog" data-toggle="modal">
 						<input id="deckID" name="deckID" value="<?php echo $deckID;?>" hidden="true">

@@ -24,7 +24,7 @@
 <body>
 	<div class="container">
 	
-		<?php include 'php/nav-bar.php'; ?>
+		<?php include 'nav-bar.php'; ?>
 	  
 		<div class="content">
 		
@@ -54,12 +54,19 @@
 					$imageName = $_FILES["imageFile"]["tmp_name"]; // Get the path of image file
 					$null = NULL; // bind_param() requires parameters
 					
+					$madePublic = isset($_POST['publicCheck']); // Check to see value for the checkbox 
+		
+					if($madePublic)
+						$isPublic = 1;
+					else
+						$isPublic = 0;
+					
 					if (!$imageName) { // No image selected, use default image
 						$imageName = "icon.png";
 					} 
 					// Query to insert new deck
-					$stmt = $conn->prepare('INSERT INTO deck (title, description, image, userID) VALUES (?, ?, ?, ?)');
-					$stmt->bind_param('ssbi', $title, $description, $null, $userID);
+					$stmt = $conn->prepare('INSERT INTO deck (title, description, image, userID, public) VALUES (?, ?, ?, ?, ?)');
+					$stmt->bind_param('ssbii', $title, $description, $null, $userID, $isPublic);
 					
 					$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
 					
@@ -198,6 +205,8 @@
 			<input class="form-control form-control-lg mb-2" type="text" name="deckTitle" placeholder="Title">
 			<input class="form-control form-control-lg mb-2" type="text" name="deckDescription" placeholder="Description">
 			<input type="submit" id="createDeckButton" name="createDeckButton" hidden="true">
+			<input id="publicCheck" name="publicCheck" type="checkbox">
+			<label for="publicCheck">Public</label>
 		  </form>
 		  </div>
 		  <div class="modal-footer">
