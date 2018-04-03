@@ -1,3 +1,7 @@
+<style>
+<?php include 'css/main.css'; ?>
+</style>
+
 <?php
 	// Database values
 	$servername = "localhost";
@@ -64,10 +68,11 @@
 						<div class='card-body'>
 							<!--<input class='form-control form-control-lg mb-2' type='text' placeholder='$question'>-->
 							<b>Q: </b>
-							<p class='card-text' id='question$cardID'>$question</p><p>
+							<p class='text' id='question$cardID'>$question</p>
+							<hr>
 							<!--<input class='form-control form-control-lg' type='text' placeholder='$answer'>-->
 							<b>A: </b>
-							<p class='card-text' id='answer$cardID'>$answer</p>
+							<p class = 'text' id='answer$cardID'>$answer</p>
 						</div>
 						<div class='card-footer text-center'>
 							<input type='button' class='btn btn-primary' value='Edit Card' onclick='prepareEditCard($cardID)'>

@@ -1,3 +1,4 @@
+
 <?php 
   session_start(); 
 
@@ -10,9 +11,15 @@
   	unset($_SESSION['username']);
   	header("location: index.php");
   }
+  
+  
 ?>
+<style>
+<?php include 'css/main.css'; ?>
+</style>
 
 <?php
+
 		if (isset($_GET['deckID'])) {
 			$deckID = $_GET['deckID'];
 			
@@ -121,14 +128,14 @@
 					
 					<!-- Question -->
 					<div class="pt-3 pb-3" id="question">
-						<img id="questionImage" src="icon.png" class="rounded mx-auto d-block pb-3" alt="...">
-						<p id="questionText" > This is a question. </p>
+						<img id="questionImage" src="icon.png" class="rounded mx-auto d-block pb-3" height = '150' width = '150' alt="...">
+						<p class = 'card' id="questionText" > This is a question. </p>
 					</div>
 					
 					<!-- Answer -->
 					<div style="display:none" class="pt-3 pb-3" id="answer">
-						<img id="answerImage" src="icon.png" class="rounded mx-auto d-block pb-3" alt="...">
-						<p id="answerText" >This is an answer. </p>
+						<img id="answerImage" src="icon.png" class="rounded mx-auto d-block pb-3" height = '150' width = '150' alt="...">
+						<p class = 'card' id="answerText" >This is an answer. </p>
 					</div>
 			</div>
 			

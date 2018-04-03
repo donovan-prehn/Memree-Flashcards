@@ -11,6 +11,10 @@
   	header("location: index.php");
   }
 ?>
+<style>
+<?php include 'css/main.css'; ?>
+</style>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -216,8 +220,8 @@
 			echo '	<div class="card" style="width: 18rem;display: inline-block;">
 						<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
 						<div class="card-body">
-						  <h5 class="card-title" style="color: black;">'.$title.'</h5>
-						  <p class="card-text" style="color: black;">'.$description.'</p>
+						  <h5 class="deckTitle" style="color: black;">'.$title.'</h5>
+						  <p class="cardDescription" style="color: black;">'.$description.'</p>
 						</div>
 						<div class="card-footer  text-center">	
 							<form action="study.php" method="get">
