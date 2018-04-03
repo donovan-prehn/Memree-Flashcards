@@ -5,6 +5,7 @@
 		<li class="nav-item">
 		  <a class="nav-link" href="home.php">My Decks</a>
 		</li>
+		<a class="nav-link" href="public.php">Public Decks</a>
 	</ul>
 	
 	<!-- Logged in as / Logout Button -->
