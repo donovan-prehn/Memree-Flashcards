@@ -29,6 +29,11 @@
 				
 				// Display the deck in a Bootstrap card class format
 				echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
+							
+							<button type="button" class="close" aria-label="Close" style="position:absolute; right:0px; top:-10px;" onclick="showConfirmDialog('.$deckID.')">
+							  <span aria-hidden="true"><font color="red" size="8">&times;</font></span>
+							</button>
+							
 							<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
 							<div class="card-body">
 							  <h5 class="deckTitle" style="color: black;">'.$title.'</h5>
