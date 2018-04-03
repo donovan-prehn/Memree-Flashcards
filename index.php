@@ -1,4 +1,8 @@
-<?php include('server.php') ?>
+<?php
+	session_start(); 
+	include 'php/registerUser.php';
+	include 'php/authenticateUser.php';
+?>
 
 <!doctype html>
 <html lang="en">

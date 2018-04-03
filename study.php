@@ -1,4 +1,3 @@
-
 <?php 
   session_start(); 
 
@@ -6,31 +5,19 @@
   	$_SESSION['msg'] = "You must log in first";
   	header('location: index.php');
   }
-  if (isset($_GET['logout'])) {
+  if(isset($_GET['logout'])) {
   	session_destroy();
   	unset($_SESSION['username']);
   	header("location: index.php");
   }
   
-  
 ?>
+<!-- Get cards from database and store in JavaScript array -->
 <?php
-
 		if (isset($_GET['deckID'])) {
 			$deckID = $_GET['deckID'];
 			
-			$servername = "localhost";
-			$username = "root";
-			$password = "";
-			$dbname = "memree_flashcards";
-			
-			// Create connection
-			$conn = mysqli_connect($servername, $username, $password, $dbname);
-			
-			// Check connection
-			if (!$conn) {
-				die("Connection failed: " . mysqli_connect_error());
-			}
+			include 'php/db_connection.php';
 			
 			$userID = $_SESSION['userID'];
 			$sql = "SELECT * FROM card WHERE deckID='$deckID'";
@@ -131,7 +118,6 @@
 			</div>
 		</div>
 
-		
 	</div>
 	
 	
@@ -142,9 +128,10 @@
 	
 	<script type="text/javascript">
 	
-	function mod(n, m) {
-		return ((n % m) + m) % m;
-	}
+		function mod(n, m) {
+			return ((n % m) + m) % m;
+		}
+		
 		var index = 0;
 		var cards = <?php echo json_encode($cards);?>;
 	
