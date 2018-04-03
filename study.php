@@ -70,7 +70,7 @@
 
 	<div class="container">
 	
-		<?php include 'nav-bar.php'; ?>
+		<?php include 'php/nav-bar.php'; ?>
 		
 		<div class="row align-items-center justify-content-md-center mt-5">
 		
