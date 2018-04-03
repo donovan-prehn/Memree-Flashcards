@@ -295,6 +295,7 @@
 			$row = $result->fetch_assoc(); // Get the row
 			$title = $row['title']; // Retrieve title from row
 			$description = $row['description']; // Retrieve descriptoin from row
+			$madePublic = $row['public'];	//retreive the value in the public row
 			
 			$imageBlob = $row['image']; // Retrieve image blob from row
 			$image = imagecreatefromstring($imageBlob);  // Create an image object out of the blob
@@ -333,7 +334,7 @@
 						Image (Max 2 MB):
 						<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 						<div id="imageDiv"></div>
-						<input id="publicCheck" name="publicCheck" type="checkbox">
+						<input id="publicCheck" name="publicCheck" type="checkbox" <?php if($madePublic) echo 'checked'; ?>>
 						<label for="publicCheck">Public</label>
 						<br>
 						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
