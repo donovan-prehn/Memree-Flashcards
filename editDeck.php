@@ -14,19 +14,7 @@
 
 <?php
 	if (isset($_POST['deleteCardButton'])) {
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
-		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
+		include 'php/db_connection.php';
 		
 		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
 		

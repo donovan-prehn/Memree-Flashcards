@@ -3,19 +3,7 @@
 </style>
 
 <?php
-	// Database values
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "memree_flashcards";
-	
-	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
-	
-	// Check connection
-	if ($conn->connect_error) {
-		die("Connection failed: " . $conn->connect_error);
-	}
+	include 'php/db_connection.php';
 	
 	//$userID = $_SESSION['userID']; // Get user ID
 	$deckID = $_POST['deckID']; // Get Deck ID from previous page
