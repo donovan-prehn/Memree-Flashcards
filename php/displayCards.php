@@ -64,10 +64,10 @@
 						<div class='card-body'>
 							<!--<input class='form-control form-control-lg mb-2' type='text' placeholder='$question'>-->
 							<b>Q: </b>
-							<label id='question$cardID'>$question</label><p>
+							<p class='card-text' id='question$cardID'>$question</p><p>
 							<!--<input class='form-control form-control-lg' type='text' placeholder='$answer'>-->
 							<b>A: </b>
-							<label id='answer$cardID'>$answer</label>
+							<p class='card-text' id='answer$cardID'>$answer</p>
 						</div>
 						<div class='card-footer text-center'>
 							<input type='button' class='btn btn-primary' value='Edit Card' onclick='prepareEditCard($cardID)'>
