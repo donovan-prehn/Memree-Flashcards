@@ -14,19 +14,8 @@
 
 <?php
 	if (isset($_POST['deleteCardButton'])) {
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
 		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
+		include 'php/db_connection.php';
 		
 		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
 		
@@ -54,19 +43,8 @@
 <?php
 	// This is called when the "Save Changes" button is clicked on edit card dialog
 	if (isset($_POST['editCardButton'])) {
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
 		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
+		include 'php/db_connection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
@@ -127,19 +105,8 @@
 <?php
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
 		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
+		include 'php/db_connection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
@@ -200,19 +167,8 @@
 <?php
 	// This is called when the "Update" button for the deck is clicked
 	if (isset($_POST['updateDeck'])) {
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
 		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
+		include 'php/db_connection.php';
 		
 		// Deck values
 		$userID = $_SESSION['userID']; // Get user ID from session
@@ -272,19 +228,8 @@
 	<?php include 'php/nav-bar.php'; ?>
 		
 		<?php
-		// Database values
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "memree_flashcards";
 		
-		// Create connection
-		$conn = mysqli_connect($servername, $username, $password, $dbname);
-		
-		// Check connection
-		if (!$conn) {
-			die("Connection failed: " . mysqli_connect_error());
-		}
+		include 'php/db_connection.php';
 		
 		$userID = $_SESSION['userID']; // Get user ID
 		$deckID = $_POST['deckID']; // Get Deck ID from previous page
