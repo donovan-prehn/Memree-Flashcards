@@ -11,7 +11,6 @@
   	header("location: index.php");
   }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +23,7 @@
 <body>
 	<div class="container">
 	
-		<?php include 'nav-bar.php'; ?>
+		<?php include 'php/nav-bar.php'; ?>
 	  
 		<div class="content">
 		
@@ -45,7 +44,7 @@
 				// This is called when user submits information to create a deck
 				if (isset($_POST['createDeckButton'])) {
 					
-					include 'php/db_connection.php';
+					//include 'php/db_connection.php';
 					
 					// Deck values
 					$userID = $_SESSION['userID']; // Get user ID from session
@@ -65,12 +64,12 @@
 						$imageName = "icon.png";
 					} 
 					// Query to insert new deck
-					$stmt = $conn->prepare('INSERT INTO deck (title, description, image, userID, public) VALUES (?, ?, ?, ?, ?)');
-					$stmt->bind_param('ssbii', $title, $description, $null, $userID, $isPublic);
+					$query = 'INSERT INTO deck (title, description, image, userID, public) VALUES (?, ?, ?, ?, ?)';
+					$types = 'ssbii';
+					$parameters = array($title, $description, $null, $userID, $isPublic);
+					$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
 					
-					$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
-					
-					if ($stmt->execute()) { // If query was successful
+					if ($result == True) { // If query was successful
 						// Display alert box
 						// Maybe find a nicer way to do this
 						echo '<script language="javascript">';
@@ -82,9 +81,7 @@
 						echo 'alert("Deck creation NOT successful")';
 						echo '</script>';
 					}
-					
-					$stmt->close();
-					$conn->close();
+					//$conn->close();
 				}
 			?>
 			
@@ -93,7 +90,7 @@
 				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
 				if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
 
-					include 'php/db_connection.php';
+					//include 'php/db_connection.php';
 					
 					$userID = $_SESSION['userID']; // Get user ID from session
 					if (isset($_GET['deckID'])) {
@@ -102,23 +99,15 @@
 					else {
 						$deckID = $_POST['deckID']; // Get deck ID from $_POST (home.php delete button)
 					}
-					
-					
-					$stmt = $conn->prepare('SELECT userID FROM deck WHERE deckID=?');
-					$stmt->bind_param('i', $deckID);
-					
-					$stmt->execute(); // Run query
-					$result = $stmt->get_result(); // Get the results of running the query
+									
+					$result = $db->runQuery('SELECT userID FROM deck WHERE deckID=?', 'i', $deckID);
 					
 					if ($row = $result->fetch_assoc()) { // If there is a result from query, i.e., the deckID exists
 						if ($row['userID'] == $userID) { // User ID matches (can only delete a deck you own)
-							$stmt = $conn->prepare('DELETE FROM card WHERE deckID=?');
-							$stmt->bind_param('i', $deckID);
-							$stmt->execute();
+							$result = $db->runQuery('DELETE FROM card WHERE deckID=?', 'i', $deckID);
+
+							$result = $db->runQuery('DELETE FROM deck WHERE deckID=?', 'i', $deckID);
 							
-							$stmt = $conn->prepare('DELETE FROM deck WHERE deckID=?');
-							$stmt->bind_param('i', $deckID);
-							$stmt->execute();
 						}
 						else { // User ID does not match, i.e., trying to delete someone else's deck
 							echo "<script>";
@@ -132,8 +121,8 @@
 						echo "</script>";
 					}
 					
-					$stmt->close();
-					$conn->close();
+					//$stmt->close();
+					//$conn->close();
 				}
 			?>
 			

@@ -10,10 +10,51 @@
    Base styles: opinionated defaults
    ========================================================================== */
 
+   
 html {
     color: #222;
     font-size: 1em;
     line-height: 1.4;
+}
+
+p.card {
+   word-wrap: break-word;
+  /*white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;*/
+  min-width: 100%;
+}
+
+p.text {
+   word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 100%;
+  max-height: 3.6em;
+  min-height: 3.6em;
+  line-height: 1.2em;
+}
+
+h5.deckTitle {
+  word-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 100%;
+  max-height: 1.2em;
+  min-height: 1.2em;
+  line-height: 1.2em;
+}
+
+p.cardDescription{
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 4.5em;
+  max-height: 4.5em;
+  line-height: 1.5em;
 }
 
 /*
@@ -97,11 +138,14 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+   /* From https://stackoverflow.com/a/221967608 */
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
 
-
-
-
-
+  display: flex;
+  align-items: center;
+}
 
 
 
