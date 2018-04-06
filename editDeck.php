@@ -273,17 +273,17 @@
 		<?php
 		
 		include "php/deck.php";
-		
+				
 		$userID = $_SESSION['userID']; // Get user ID
 		$deckID = $_POST['deckID']; // Get Deck ID from previous page
 		
-		$query = 'SELECT * FROM deck WHERE userID=? and deckID=?';
-		$types = "ii";
-		$parameters = array($userID, $deckID);
+		$query = "SELECT * FROM deck WHERE userID='$userID' and deckID='$deckID'"; // Get all fields from selected deck
+		$types = Null;
+		$parameters = Null;
 		$result = $db->runQuery($query, $types, $parameters);
 		
-		//$result = $returnValue->get_result(); // Get the results of running the query
 		if ($result) { // If query was successful
+		
 			$row = $result->fetch_assoc(); // Get the row
 			
 			$title = $row['title']; // Retrieve title from row
