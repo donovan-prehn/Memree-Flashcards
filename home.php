@@ -1,6 +1,5 @@
 <?php 
   session_start(); 
-
   if (!isset($_SESSION['username'])) {
   	$_SESSION['msg'] = "You must log in first";
   	header('location: index.php');
@@ -10,7 +9,6 @@
   	unset($_SESSION['username']);
   	header("location: index.php");
   }
-
 ?>
 
 <?php
@@ -103,7 +101,6 @@
 			<?php
 				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
 				if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
-
 					//include 'php/db_connection.php';
 					
 					$userID = $_SESSION['userID']; // Get user ID from session
@@ -119,7 +116,6 @@
 					if ($row = $result->fetch_assoc()) { // If there is a result from query, i.e., the deckID exists
 						if ($row['userID'] == $userID) { // User ID matches (can only delete a deck you own)
 							$result = $db->runQuery('DELETE FROM card WHERE deckID=?', 'i', $deckID);
-
 							$result = $db->runQuery('DELETE FROM deck WHERE deckID=?', 'i', $deckID);
 							
 						}
