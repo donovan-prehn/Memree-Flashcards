@@ -1,6 +1,4 @@
 <?php
-include "Card.php";
-
 	class Deck{
 		private $deckID;
 		private $title;
@@ -8,7 +6,6 @@ include "Card.php";
 		private $image;
 		private $userID;
 		private $isPublic;
-		private $cards = null;
 		
 		public function __construct($dID, $t, $descrip, $imBlob, $uID, $isPublic){
 			$this->deckID = $dID;
@@ -47,21 +44,6 @@ include "Card.php";
 		
 		public function isPublic(){
 			return $this->isPublic;
-		}
-		
-		public function getCards(){
-			return $this->cards;
-		}
-		
-		// Add a card into array
-		public function addCard($card){
-			if ($this->cards == null) {
-				$this->cards = array($card);
-			}
-			else {
-				$size = count($this->cards);
-				$this->cards[$size] = $card;
-			}
 		}
 		
 		public function displayPublicDeck($username){

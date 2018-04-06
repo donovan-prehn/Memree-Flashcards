@@ -28,8 +28,10 @@
 	if (isset($_POST['deleteCardButton'])) {
 		
 		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
-		
-		$stmt = $conn->prepare('DELETE FROM card WHERE cardID=?');
+		$query = 'DELETE FROM card WHERE cardID=?';
+		$types = 'i';
+
+		$stmt = $conn->prepare($query);
 		$stmt->bind_param('i', $cardID);
 		
 		if ($stmt->execute()) { // If query was successful
@@ -112,6 +114,8 @@
 <?php
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
+		
+		include 'php/db_connection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
@@ -234,11 +238,11 @@
 		
 		$userID = $_SESSION['userID']; // Get user ID
 		$deckID = $_POST['deckID']; // Get Deck ID from previous page
-		
-		$stmt = $conn->prepare('SELECT * FROM deck WHERE userID=? and deckID=?');
-		$stmt->bind_param('ii', $userID, $deckID);
-		
-		$stmt->execute(); // Run query
+		$query = 'SELECT * FROM deck WHERE userID=? and deckID=?';
+		$types = "ii";
+		$parameters = array($userID, $deckId);
+
+		$result = $db->runQuery($query, $types, $parameters);
 		
 		$result = $stmt->get_result(); // Get the results of running the query
 		if ($result->num_rows > 0) { // If query was successful
@@ -246,8 +250,7 @@
 			
 			$title = $row['title']; // Retrieve title from row
 			$description = $row['description']; // Retrieve descriptoin from row
-			$madePublic = $row['public'];	//retreive the value in the public row
-			
+			$madePublic = $row['public'];	//retreive the value in the public row	
 			$imageBlob = $row['image']; // Retrieve image blob from row
 			
 			$deck = new Deck($deckID, $title, $description, $imageBlob, $userID, $madePublic);
@@ -259,8 +262,6 @@
 		
 
 		$stmt->close();
-		
-		include "php/loadCards.php"; // Load cards into deck
 		?>
 		  
 		<div class="container">
@@ -375,17 +376,8 @@
 				<input class='btn btn-primary' type='button' value='Add New Card' data-target='#addCardDialog' data-toggle='modal'/>
 			</h1>
 
-			<!-- Displays the list of cards from the deck -->
-			<?php
-			if ($deck->getCards() != null) { // If there are cards in the deck
-				foreach ($deck->getCards() as $card) {
-					$card->displayCard();
-				}
-			}
-			else { // No cards in the deck
-				echo "<h3>There are no cards in this deck yet.</h3>";
-			}
-			?>
+			<!-- Call PHP file that displays the list of cards from the deck -->
+			<?php include "php/displayCards.php"; ?>
 		</div>
 		
 	</div>
