@@ -377,8 +377,13 @@
 
 			<!-- Displays the list of cards from the deck -->
 			<?php
-			foreach ($deck->getCards() as $card) {
-				$card->displayCard();
+			if ($deck->getCards() != null) { // If there are cards in the deck
+				foreach ($deck->getCards() as $card) {
+					$card->displayCard();
+				}
+			}
+			else { // No cards in the deck
+				echo "<h3>There are no cards in this deck yet.</h3>";
 			}
 			?>
 		</div>
