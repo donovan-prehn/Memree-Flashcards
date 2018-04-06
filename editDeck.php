@@ -261,6 +261,8 @@
 		
 
 		$stmt->close();
+		
+		include "php/loadCards.php"; // Load cards into deck
 		?>
 		  
 		<div class="container">
@@ -375,8 +377,12 @@
 				<input class='btn btn-primary' type='button' value='Add New Card' data-target='#addCardDialog' data-toggle='modal'/>
 			</h1>
 
-			<!-- Call PHP file that displays the list of cards from the deck -->
-			<?php include "php/displayCards.php"; ?>
+			<!-- Displays the list of cards from the deck -->
+			<?php
+			foreach ($deck->getCards() as $card) {
+				$card->displayCard();
+			}
+			?>
 		</div>
 		
 	</div>
