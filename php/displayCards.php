@@ -3,6 +3,7 @@
 </style>
 
 <?php
+	include "php/Card.php";
 	
 	//$userID = $_SESSION['userID']; // Get user ID
 	$deckID = $_POST['deckID']; // Get Deck ID from previous page
@@ -23,6 +24,9 @@
 		
 		$imageStringQ = "icon.png"; // Default value if no image was selected
 		$imageStringA = "icon.png"; // Default value if no image was selected
+		
+		$card = new Card($deckID, $cardID, $question, $answer, "icon.png", "icon.png");
+		
 		if ($imageBlobQ != null) { // Image was selected for question
 			$imageQ = imagecreatefromstring($imageBlobQ);  // Create an image object out of the blob
 			// Process into jpg
@@ -32,6 +36,7 @@
 			ob_end_clean();
 			
 			$imageStringQ = "data:image/jpg;base64,".base64_encode($data); // String to put into <img src=...
+			$card->setQuestionImage($imageStringQ);
 		}
 		if ($imageBlobA != null) { // Image was selected for answer
 			$imageA = imagecreatefromstring($imageBlobA);  // Create an image object out of the blob
@@ -42,8 +47,10 @@
 			ob_end_clean();
 			
 			$imageStringA = "data:image/jpg;base64,".base64_encode($data); // String to put into <img src=...
+			$card->setAnswerImage($imageStringA);
 		}
-		
+		$card->displayCard();
+		/*
 		// Display each card
 		echo "	<div class='card' style='width: 18rem; display: inline-block;'>
 					<button type='button' class='close' aria-label='Close' style='position:absolute; right:0px; top:-10px;' onclick='prepareDeleteCard($cardID)'>
@@ -67,7 +74,7 @@
 						<div class='card-footer text-center'>
 							<input type='button' class='btn btn-primary' value='Edit Card' onclick='prepareEditCard($cardID)'>
 						</div>
-				</div>";
+				</div>";*/
 		
 					
 	}
