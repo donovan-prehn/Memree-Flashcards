@@ -44,7 +44,8 @@
 			
 			if ($types != NULL){
 				$stmt->bind_param($types, $parameters);
-				call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
+				if (is_array($parameters))
+					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 			}
 			$stmt->execute(); // Run query
 			$result = $stmt->get_result(); // Get the results of running the query
@@ -57,8 +58,9 @@
 			$stmt = $this->conn->prepare($query);
 			
 			if ($types != NULL){
-				//$stmt->bind_param($types, $parameters);
-				call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
+				$stmt->bind_param($types, $parameters);
+				if (is_array($parameters))
+					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 			}
 			$stmt->send_long_data($location, file_get_contents($image)); // Send blob of image
 			$result = $stmt->execute(); // Run query
@@ -73,7 +75,8 @@
 			
 			if ($types != NULL){
 				$stmt->bind_param($types, $parameters);
-				call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
+				if (is_array($parameters))
+					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 			}
 			$stmt->send_long_data($location, file_get_contents($image)); // Send blob of image
 			$stmt->send_long_data($locationTwo, file_get_contents($imageTwo)); // Send blob of answer image
