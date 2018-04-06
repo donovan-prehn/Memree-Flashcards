@@ -10,6 +10,9 @@
   	unset($_SESSION['username']);
   	header("location: index.php");
   }
+
+?>
+  
 ?>
 <!DOCTYPE html>
 <html>
@@ -66,7 +69,7 @@
 					// Query to insert new deck
 					$query = 'INSERT INTO deck (title, description, image, userID, public) VALUES (?, ?, ?, ?, ?)';
 					$types = 'ssbii';
-					$parameters = array($title, $description, $null, $userID, $isPublic);
+					$parameters = array(&$title, &$description, &$null, &$userID, &$isPublic);
 					$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
 					
 					if ($result == True) { // If query was successful
