@@ -1,3 +1,5 @@
+			<?php include 'php/deck.php'; ?>
+			
 			<?php // Displaying decks
 			
 			//$userID = $_SESSION['userID']; // Get user ID
@@ -16,46 +18,19 @@
 				$userID = $row['userID']; // Retrieve deck title
 				$title = $row['title']; // Retrieve deck title
 				$description = $row['description']; // Retrieve deck description
-				$deckID = $row['deckID']; // Retrieve deck ID
-				
+				$deckID = $row['deckID']; // Retrieve deck ID			
 				$imageBlob = $row['image']; // Retrieve deck image blob
-				$image = imagecreatefromstring($imageBlob); // Create an image object out of the blob
-				// Process into jpg
-				ob_start();
-				imagejpeg($image, null, 80);
-				$data = ob_get_contents();
-				ob_end_clean();
 				
 				
-				//$username = $userID;
 				$query = "SELECT * FROM users WHERE userID='$userID'";
 				$usernameResult = $conn->query($query);
 
 				$usernameRow = $usernameResult->fetch_assoc();
 				$username = $usernameRow['username'];
 			
-				//$query->bind_param('i', $userID);
-				//$query->execute(); // Run query
-				//$usernameResult = $query->get_result(); // Get the results of running the query
-				
-				
-				// Display the deck in a Bootstrap card class format
-				echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
-							<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($data)  . '" alt="Card image cap">
-							<div class="card-body">
-							  <h5 class="deckTitle" style="color: black;">'.$title.'</h5>
-							  <p class="cardDescription" style="color: black;">'.$description.'</p>
-							</div>
-							<div class="card-footer  text-center">	
-								<form action="study.php" method="get">
-									<h5 class="deckTitle" style="color: black;">Owner: '.$username.'</h5>
-									<input name="deckID" value="'.$deckID.'" hidden="true"/>
-									<input class="btn btn-primary" type="submit" value="Study Deck">
-								</form>
-			
-							  
-							</div>
-						</div>';
+				$deck = new Deck($deckID, $title, $description, $imageBlob, $userID);
+				$deck->displayPublicDeck($username);
+
 			}
 			}
 			

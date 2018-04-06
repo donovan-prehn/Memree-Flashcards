@@ -5,18 +5,16 @@
 		private $description;
 		private $image;
 		private $userID;
-		private $publicValue;
 		
-		public function setProperties($dID, $t, $descrip, $im, $uID, $pub){
+		public function __construct($dID, $t, $descrip, $imBlob, $uID){
 			$this->deckID = $dID;
 			$this->title = $t;
 			$this->decription = $descrip;
-			$this->image = $im;
+			$this->image = $imBlob;
 			$this->userID = $uID;
-			$this->pub = $publicValue;
 			
 			// Process image from blob into jpg
-			$imageBlob = imagecreatefromstring($im); 
+			$imageBlob = imagecreatefromstring($imBlob); 
 			ob_start();
 			imagejpeg($imageBlob, null, 80);
 			$this->image = ob_get_contents();
@@ -40,10 +38,6 @@
 		
 		public function getUserID(){
 			return $this->userID;
-		}
-		
-		public function getPublic(){
-			return $this->publicValue;
 		}
 		
 		public function displayPublicDeck($username){
