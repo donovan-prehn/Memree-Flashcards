@@ -3,7 +3,6 @@
 </style>
 
 <?php
-	include 'php/db_connection.php';
 	
 	//$userID = $_SESSION['userID']; // Get user ID
 	$deckID = $_POST['deckID']; // Get Deck ID from previous page
@@ -74,6 +73,5 @@
 	}
 
 	$stmt->close();
-	$conn->close();
 				
 ?>

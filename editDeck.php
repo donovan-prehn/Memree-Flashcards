@@ -13,9 +13,19 @@
 ?>
 
 <?php
+	include 'php/db_connection.php';
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "memree_flashcards";
+	
+	$db = new DbConnection($servername, $username, $password, $dbname);
+	$db->connect();
+	$conn = $db->getConnection();
+?>
+
+<?php
 	if (isset($_POST['deleteCardButton'])) {
-		
-		include 'php/db_connection.php';
 		
 		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
 		
@@ -36,15 +46,13 @@
 		}
 		
 		$stmt->close();
-		$conn->close();
+
 	}
 ?>
 
 <?php
 	// This is called when the "Save Changes" button is clicked on edit card dialog
 	if (isset($_POST['editCardButton'])) {
-		
-		include 'php/db_connection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
@@ -97,7 +105,6 @@
 		}
 		
 		$stmt->close();
-		$conn->close();
 	}
 
 ?>
@@ -160,16 +167,13 @@
 		}
 		
 		$stmt->close();
-		$conn->close();
 	}
 ?>
 		
 <?php
 	// This is called when the "Update" button for the deck is clicked
 	if (isset($_POST['updateDeck'])) {
-		
-		include 'php/db_connection.php';
-		
+
 		// Deck values
 		$userID = $_SESSION['userID']; // Get user ID from session
 		$deckID = $_POST['deckID']; // Get deck ID from hidden input
@@ -212,7 +216,6 @@
 		}
 		
 		$stmt->close();
-		$conn->close();
 	}
 ?>
 <!DOCTYPE html>
@@ -228,8 +231,6 @@
 	<?php include 'php/nav-bar.php'; ?>
 		
 		<?php
-		
-		include 'php/db_connection.php';
 		
 		$userID = $_SESSION['userID']; // Get user ID
 		$deckID = $_POST['deckID']; // Get Deck ID from previous page
@@ -256,7 +257,7 @@
 			$description = "error";
 		}
 		
-		mysqli_close($conn);
+
 		
 		?>
 		  
@@ -527,6 +528,9 @@
 	  </div>
 	</div>
 	
+	<?php
+		$conn->close();
+	?>
 	
 	<!-- Bootstrap -->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

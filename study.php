@@ -12,12 +12,22 @@
   }
   
 ?>
+
+<?php
+	include 'php/db_connection.php';
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "memree_flashcards";
+	
+	$db = new DbConnection($servername, $username, $password, $dbname);
+	$db->connect();
+	$conn = $db->getConnection();
+?>
 <!-- Get cards from database and store in JavaScript array -->
 <?php
 		if (isset($_GET['deckID'])) {
 			$deckID = $_GET['deckID'];
-			
-			include 'php/db_connection.php';
 			
 			$stmt = $conn->prepare('SELECT * FROM card WHERE deckID=?'); // Get all fields from selected card
 			$stmt->bind_param('i', $deckID);
@@ -53,7 +63,6 @@
 				$index=$index+1;
 			}
 			$stmt->close();
-			$conn->close();
 		}
 ?>
 		
@@ -191,6 +200,9 @@
 
 	</script>
 			
+	<?php
+		$conn->close();
+	?>
 
 </body>
 </html>

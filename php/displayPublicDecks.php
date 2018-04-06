@@ -1,7 +1,5 @@
 			<?php // Displaying decks
 			
-			include 'php/db_connection.php';
-			
 			//$userID = $_SESSION['userID']; // Get user ID
 			
 			$stmt = $conn->prepare('SELECT * FROM deck WHERE public="1"');
@@ -62,5 +60,4 @@
 			}
 			
 			$stmt->close();
-			$conn->close();
 			?>

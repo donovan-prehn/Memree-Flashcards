@@ -1,8 +1,12 @@
 			<?php // Displaying decks
 			
 			include 'php/db_connection.php';
+			$servername = "localhost";
+			$username = "root";
+			$password = "";
+			$dbname = "memree_flashcards";
 			
-			$db = new DbConnection("localhost", "root", "", "memree_flashcards");
+			$db = new DbConnection($servername, $username, $password, $dbname);
 			$db->connect();
 			$conn = $db->getConnection();
 			
