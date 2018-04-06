@@ -22,18 +22,19 @@
 	
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	$conn = $db->getConnection();
+	//$conn = $db->getConnection();
 ?>
 <!-- Get cards from database and store in JavaScript array -->
 <?php
 		if (isset($_GET['deckID'])) {
 			$deckID = $_GET['deckID'];
+			//$stmt = $conn->prepare('SELECT * FROM card WHERE deckID=?'); // Get all fields from selected card
+			//$stmt->bind_param('i', $deckID);
 			
-			$stmt = $conn->prepare('SELECT * FROM card WHERE deckID=?'); // Get all fields from selected card
-			$stmt->bind_param('i', $deckID);
-			$stmt->execute(); // Run query
+			//$stmt->execute(); // Run query
 			
-			$result = $stmt->get_result(); // Get the results of running the query
+			$result = $db->runQuery('SELECT * FROM card WHERE deckID=?', 'i', $deckID);
+			//$result = $stmt->get_result(); // Get the results of running the query
 			
 			if (!$result) {
 				echo '<script language="javascript">';
@@ -62,7 +63,7 @@
 
 				$index=$index+1;
 			}
-			$stmt->close();
+			//$stmt->close();
 		}
 ?>
 		
@@ -201,7 +202,7 @@
 	</script>
 			
 	<?php
-		$conn->close();
+		//$conn->close();
 	?>
 
 </body>
