@@ -232,60 +232,62 @@
 		
 		<?php
 		
+		include "php/deck.php";
+		
 		$userID = $_SESSION['userID']; // Get user ID
 		$deckID = $_POST['deckID']; // Get Deck ID from previous page
-		$sql = "SELECT * FROM deck WHERE userID='$userID' and deckID='$deckID'"; // Get all fields from selected deck
-		$result = mysqli_query($conn, $sql); // Run query
 		
-		if ($result) { // If query was successful
+		$stmt = $conn->prepare('SELECT * FROM deck WHERE userID=? and deckID=?');
+		$stmt->bind_param('ii', $userID, $deckID);
+		
+		$stmt->execute(); // Run query
+		
+		$result = $stmt->get_result(); // Get the results of running the query
+		if ($result->num_rows > 0) { // If query was successful
 			$row = $result->fetch_assoc(); // Get the row
+			
 			$title = $row['title']; // Retrieve title from row
 			$description = $row['description']; // Retrieve descriptoin from row
 			$madePublic = $row['public'];	//retreive the value in the public row
 			
 			$imageBlob = $row['image']; // Retrieve image blob from row
-			$image = imagecreatefromstring($imageBlob);  // Create an image object out of the blob
 			
-			// Process into jpg
-			ob_start();
-			imagejpeg($image, null, 80);
-			$data = ob_get_contents();
-			ob_end_clean();			
+			$deck = new Deck($deckID, $title, $description, $imageBlob, $userID, $madePublic);
+		
 		}
 		else {
-			$title = "error";
-			$description = "error";
+			$deck = new Deck(null, "error", "error", null, null, null);
 		}
 		
 
-		
+		$stmt->close();
 		?>
 		  
 		<div class="container">
 			<div class="row bg-light px-3 py-3">
 				<div class="col-md-auto">
 					<h4>Deck Image</h4>
-					<img id="deckImage" src=<?php echo "'data:image/jpg;base64,".base64_encode($data)."' "; ?> alt="..." class="img-thumbnail" width="192" height="192">
+					<img id="deckImage" src=<?php echo "'data:image/jpg;base64,".base64_encode($deck->getImage())."' "; ?> alt="..." class="img-thumbnail" width="192" height="192">
 				</div>
 				<div class="col-lg-6">
 					<form method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<h4>Deck Title</h4>
-							<input type="text" name="deckTitle" class="form-control" id="inputDeckTitle" value="<?php echo $title;?>">
+							<input type="text" name="deckTitle" class="form-control" id="inputDeckTitle" value="<?php echo $deck->getTitle();?>">
 						</div>
 						<div class="form-group">
 							<h4>Deck Description</h4>
-							<input type="textarea" name="deckDescription" class="form-control" id="inputDeckTitle" value="<?php echo $description;?>">
+							<input type="textarea" name="deckDescription" class="form-control" id="inputDeckTitle" value="<?php echo $deck->getDescription();?>">
 						</div>
 						Image (Max 2 MB):
 						<input type="file" id="imageFile" name="imageFile" onchange="displayChosenImage(this,true,'deckImage')">
 						<div id="imageDiv"></div>
-						<input id="publicCheck" name="publicCheck" type="checkbox" <?php if($madePublic) echo 'checked'; ?>>
+						<input id="publicCheck" name="publicCheck" type="checkbox" <?php if($deck->isPublic()) echo 'checked'; ?>>
 						<label for="publicCheck">Public</label>
 						<br>
 						<input type="button" id="updateDeck" name="updateDeck" value="Update" class="btn btn-primary" data-target="#updateDeckDialog" data-toggle="modal">
 						<input type="button" id="deleteDeck" name="deleteDeck" value="Delete" class="btn btn-secondary" data-target="#deleteDeckDialog" data-toggle="modal">
-						<input id="deckID" name="deckID" value="<?php echo $deckID;?>" hidden="true">
+						<input id="deckID" name="deckID" value="<?php echo $deck->getDeckID();?>" hidden="true">
 					</form>
 				</div>
 			</div>

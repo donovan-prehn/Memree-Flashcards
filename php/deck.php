@@ -5,13 +5,15 @@
 		private $description;
 		private $image;
 		private $userID;
+		private $isPublic;
 		
-		public function __construct($dID, $t, $descrip, $imBlob, $uID){
+		public function __construct($dID, $t, $descrip, $imBlob, $uID, $isPublic){
 			$this->deckID = $dID;
 			$this->title = $t;
 			$this->decription = $descrip;
 			$this->image = $imBlob;
 			$this->userID = $uID;
+			$this->isPublic = $isPublic;
 			
 			// Process image from blob into jpg
 			$imageBlob = imagecreatefromstring($imBlob); 
@@ -29,7 +31,7 @@
 			return $this->title;
 		}
 		
-		public function getDecription(){
+		public function getDescription(){
 			return $this->description;
 		}
 		public function getImage(){
@@ -38,6 +40,10 @@
 		
 		public function getUserID(){
 			return $this->userID;
+		}
+		
+		public function isPublic(){
+			return $this->isPublic;
 		}
 		
 		public function displayPublicDeck($username){
