@@ -2,6 +2,10 @@
 			
 			include 'php/db_connection.php';
 			
+			$db = new DbConnection("localhost", "root", "", "memree_flashcards");
+			$db->connect();
+			$conn = $db->getConnection();
+			
 			$userID = $_SESSION['userID']; // Get user ID
 			
 			$stmt = $conn->prepare('SELECT * FROM deck WHERE userID=?');
