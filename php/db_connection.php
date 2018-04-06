@@ -52,18 +52,34 @@
 			return $result;
 		}		
 		
-		public function sendQueryWithBlob($query, $types, $parameters, $image){
+		public function sendQueryWithBlob($query, $types, $parameters, $image, $location){
 			$stmt = $this->conn->prepare($query);
 			
 			if ($types != NULL){
 				$stmt->bind_param($types, $parameters);
 			}
-			$stmt->send_long_data(2, file_get_contents($image)); // Send blob of image
+			$stmt->send_long_data($location, file_get_contents($image)); // Send blob of image
 			$result = $stmt->execute(); // Run query
 			$stmt->close();
 			
 			return $result;
 			
 		}
+		
+		public function sendQueryWithTwoBlobs($query, $types, $parameters, $image, $imageTwo, $location, $locationTwo){
+			$stmt = $this->conn->prepare($query);
+			
+			if ($types != NULL){
+				$stmt->bind_param($types, $parameters);
+			}
+			$stmt->send_long_data($location, file_get_contents($image)); // Send blob of image
+			$stmt->send_long_data($locationTwo, file_get_contents($imageTwo)); // Send blob of answer image
+			$result = $stmt->execute(); // Run query
+			$stmt->close();
+			
+			return $result;
+			
+		}
+		
 	}
  ?>

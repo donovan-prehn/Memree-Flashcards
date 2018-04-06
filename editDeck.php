@@ -27,14 +27,14 @@
 <?php
 	if (isset($_POST['deleteCardButton'])) {
 		
-		$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
-		$query = 'DELETE FROM card WHERE cardID=?';
-		$types = 'i';
-
-		$stmt = $conn->prepare($query);
-		$stmt->bind_param('i', $cardID);
+		//$cardID = $_POST['deleteCardID']; // Get card ID from hidden input
+		//$query = 'DELETE FROM card WHERE cardID=?';
+		//$types = 'i';
+		$result = $db->runQuery('DELETE FROM card WHERE cardID=?', 'i', $cardID);
+		//$stmt = $conn->prepare($query);
+		//$stmt->bind_param('i', $cardID);
 		
-		if ($stmt->execute()) { // If query was successful
+		if ($result == True) { // If query was successful
 			// Display alert box
 			// Maybe find a nicer way to do this
 			echo '<script language="javascript">';
@@ -47,7 +47,7 @@
 			echo '</script>';
 		}
 		
-		$stmt->close();
+		//$stmt->close();
 
 	}
 ?>
@@ -69,31 +69,45 @@
 		
 		if (!$imageNameQ or !$imageNameA) { // No image for question/answer selected
 			if ($imageNameQ) { // Image selected for question
-				$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, questionImage=? WHERE cardID=?');
-				$stmt->bind_param('ssbi', $question, $answer, $null, $cardID);
-			
-				$stmt->send_long_data(2, file_get_contents($imageNameQ)); // Send blob of question image
+				//$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, questionImage=? WHERE cardID=?');
+				//$stmt->bind_param('ssbi', $question, $answer, $null, $cardID);
+				//$stmt->send_long_data(2, file_get_contents($imageNameQ)); // Send blob of question image
+				
+				$query = 'UPDATE card SET question=?, answer=?, questionImage=? WHERE cardID=?';
+				$types = 'ssbii';
+				$parameters = array($question, $answer, $null, $cardID);
+				$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageNameQ, 2);
 			}
 			elseif ($imageNameA) { // Image selected for answer
-				$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, answerImage=? WHERE cardID=?');
-				$stmt->bind_param('ssbi', $question, $answer, $null, $cardID);
-			
-				$stmt->send_long_data(2, file_get_contents($imageNameA)); // Send blob of question image
+				//$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, answerImage=? WHERE cardID=?');
+				//$stmt->bind_param('ssbi', $question, $answer, $null, $cardID);
+				//$stmt->send_long_data(2, file_get_contents($imageNameA)); // Send blob of question image
+				
+				$query = 'UPDATE card SET question=?, answer=?, answerImage=? WHERE cardID=?';
+				$types = 'ssbi';
+				$parameters = array($question, $answer, $null, $cardID);
+				$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageNameQ, 2);
 			}
 			else { // No images selected
-				$stmt = $conn->prepare('UPDATE card SET question=?, answer=? WHERE cardID=?');
-				$stmt->bind_param('ssi', $question, $answer, $cardID);
+				//$stmt = $conn->prepare('UPDATE card SET question=?, answer=? WHERE cardID=?');
+				//$stmt->bind_param('ssi', $question, $answer, $cardID);
+				$parameters = array($question, $answer, $cardID);
+				$result = $db->runQuery('UPDATE card SET question=?, answer=? WHERE cardID=?', 'ssi', $parameters);
 			}
 		} 
 		else { // Images selected for both Q/A
-			$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, questionImage=?, answerImage=? WHERE cardID=?');
-			$stmt->bind_param('ssbbi', $question, $answer, $null, $null, $cardID);
+			//$stmt = $conn->prepare('UPDATE card SET question=?, answer=?, questionImage=?, answerImage=? WHERE cardID=?');
+			//$stmt->bind_param('ssbbi', $question, $answer, $null, $null, $cardID);
+			//$stmt->send_long_data(2, file_get_contents($imageNameQ)); // Send blob of question image
+			//$stmt->send_long_data(3, file_get_contents($imageNameA)); // Send blob of answer image
 			
-			$stmt->send_long_data(2, file_get_contents($imageNameQ)); // Send blob of question image
-			$stmt->send_long_data(3, file_get_contents($imageNameA)); // Send blob of answer image
+			$query = 'UPDATE card SET question=?, answer=?, questionImage=?, answerImage=? WHERE cardID=?';
+			$types = 'ssbbi';
+			$parameters = array($question, $answer, $null, $null, $cardID);
+			$result = $db->sendQueryWithTwoBlobs($query, $types, $parameters, $imageNameQ, $imageNameA, 2, 3);
 		}
 		
-		if ($stmt->execute()) { // If query was successful
+		if ($result == True) { // If query was successful
 			// Display alert box
 			// Maybe find a nicer way to do this
 			echo '<script language="javascript">';
@@ -106,7 +120,7 @@
 			echo '</script>';
 		}
 		
-		$stmt->close();
+		//$stmt->close();
 	}
 
 ?>
@@ -115,7 +129,7 @@
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
 		
-		include 'php/db_connection.php';
+		//include 'php/db_connection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
@@ -129,33 +143,48 @@
 		
 		if (!$imageNameQ or !$imageNameA) { // No image for question/answer selected
 			if ($imageNameQ) { // Image selected for question
-				$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, questionImage) VALUES (?, ?, ?, ?)");
-				$stmt->bind_param('issb', $deckID, $question, $answer, $null);
-			
-				$stmt->send_long_data(3, file_get_contents($imageNameQ)); // Send blob of question image
+				//$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, questionImage) VALUES (?, ?, ?, ?)");
+				//$stmt->bind_param('issb', $deckID, $question, $answer, $null);
+				//$stmt->send_long_data(3, file_get_contents($imageNameQ)); // Send blob of question image
+				
+				$query = "INSERT INTO card (deckID, question, answer, questionImage) VALUES (?, ?, ?, ?)";
+				$types = 'issb';
+				$parameters = array($deckID, $question, $answer, $null);
+				$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageNameQ, 3);
 			}
 			elseif ($imageNameA) { // Image selected for answer
-				$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, answerImage) VALUES (?, ?, ?, ?)");
-				$stmt->bind_param('issb', $deckID, $question, $answer, $null);
-			
-				$stmt->send_long_data(3, file_get_contents($imageNameA)); // Send blob of question image
+				//$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, answerImage) VALUES (?, ?, ?, ?)");
+				//$stmt->bind_param('issb', $deckID, $question, $answer, $null);
+				//$stmt->send_long_data(3, file_get_contents($imageNameA)); // Send blob of question image
+				
+				$query = "INSERT INTO card (deckID, question, answer, answerImage) VALUES (?, ?, ?, ?)";
+				$types = 'issb';
+				$parameters = array($deckID, $question, $answer, $null);
+				$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageNameA, 3);
 			}
 			else { // No images selected
-				$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer) VALUES (?, ?, ?)");
-				$stmt->bind_param('iss', $deckID, $question, $answer);
+				//$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer) VALUES (?, ?, ?)");
+				//$stmt->bind_param('iss', $deckID, $question, $answer);
+				
+				$query = "INSERT INTO card (deckID, question, answer) VALUES (?, ?, ?)";
+				$types = 'iss';
+				$parameters = array($deckID, $question, $answer);
+				$result = $db->runQuery($query, $types, $parameters);
 			}
 		} 
 		else { // Images selected for both Q/A
+			//$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES (?, ?, ?, ?, ?)");
+			//$stmt->bind_param('issbb', $deckID, $question, $answer, $null, $null);
+			//$stmt->send_long_data(3, file_get_contents($imageNameQ)); // Send blob of question image
+			//$stmt->send_long_data(4, file_get_contents($imageNameA)); // Send blob of answer image
 			
-			
-			$stmt = $conn->prepare("INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES (?, ?, ?, ?, ?)");
-			$stmt->bind_param('issbb', $deckID, $question, $answer, $null, $null);
-			
-			$stmt->send_long_data(3, file_get_contents($imageNameQ)); // Send blob of question image
-			$stmt->send_long_data(4, file_get_contents($imageNameA)); // Send blob of answer image
+			$query = "INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES (?, ?, ?, ?, ?)";
+			$types = 'issbb';
+			$parameters = array($deckID, $question, $answer, $null, $null);
+			$result = $db->sendQueryWithTwoBlobs($query, $types, $parameters, $imageNameQ, $imageNameA, 3, 4);
 		}
 		
-		if ($stmt->execute()) { // If query was successful
+		if ($result) { // If query was successful
 			// Display alert box
 			// Maybe find a nicer way to do this
 			echo '<script language="javascript">';
@@ -168,7 +197,7 @@
 			echo '</script>';
 		}
 		
-		$stmt->close();
+		//$stmt->close();
 	}
 ?>
 		
@@ -192,19 +221,28 @@
 		
 		if (!$imageName) { // No image selected, update title/description only
 			// Query to update the deck title and description only
-			$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, public=? WHERE userID=? and deckID=?');
-			$stmt->bind_param('ssiii', $title, $description, $isPublic, $userID, $deckID);
+			//$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, public=? WHERE userID=? and deckID=?');
+			//$stmt->bind_param('ssiii', $title, $description, $isPublic, $userID, $deckID);
+			
+			$query = 'UPDATE deck SET title=?, description=?, public=? WHERE userID=? and deckID=?';
+			$types = 'ssiii';
+			$parameters = array($title, $description, $isPublic, $userID, $deckID);
+			$result = $db->runQuery($query, $types, $parameters);
 		} 
 		else {
 			$null = NULL; // bind_param() requires parameters
 			// Query to update the deck title, description, and image
-			$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, image=?, public=?  WHERE userID=? and deckID=?');
-			$stmt->bind_param('ssbiii', $title, $description, $null, $isPublic, $userID, $deckID);
+			//$stmt = $conn->prepare('UPDATE deck SET title=?, description=?, image=?, public=?  WHERE userID=? and deckID=?');
+			//$stmt->bind_param('ssbiii', $title, $description, $null, $isPublic, $userID, $deckID);
+			//$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
 			
-			$stmt->send_long_data(2, file_get_contents($imageName)); // Send blob of image
+			$query = 'UPDATE deck SET title=?, description=?, image=?, public=?  WHERE userID=? and deckID=?';
+			$types = 'ssbiii';
+			$parameters = array($title, $description, $null, $isPublic, $userID, $deckID);
+			$result = $db->sendQueryWithBlob($query, $types, $parameters);
 		}
 		
-		if ($stmt->execute()) { // If query was successful
+		if ($result) { // If query was successful
 			// Display alert box
 			// Maybe find a nicer way to do this
 			echo '<script language="javascript">';
@@ -217,7 +255,7 @@
 			echo '</script>';
 		}
 		
-		$stmt->close();
+		//$stmt->close();
 	}
 ?>
 <!DOCTYPE html>
@@ -238,14 +276,14 @@
 		
 		$userID = $_SESSION['userID']; // Get user ID
 		$deckID = $_POST['deckID']; // Get Deck ID from previous page
+		
 		$query = 'SELECT * FROM deck WHERE userID=? and deckID=?';
 		$types = "ii";
-		$parameters = array($userID, $deckId);
-
+		$parameters = array($userID, $deckID);
 		$result = $db->runQuery($query, $types, $parameters);
 		
-		$result = $stmt->get_result(); // Get the results of running the query
-		if ($result->num_rows > 0) { // If query was successful
+		//$result = $returnValue->get_result(); // Get the results of running the query
+		if ($result) { // If query was successful
 			$row = $result->fetch_assoc(); // Get the row
 			
 			$title = $row['title']; // Retrieve title from row
@@ -261,7 +299,7 @@
 		}
 		
 
-		$stmt->close();
+		//$stmt->close();
 		?>
 		  
 		<div class="container">

@@ -21,7 +21,7 @@
 	
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	$conn = $db->getConnection();
+	//$conn = $db->getConnection();
 ?>
 
 <!DOCTYPE html>
@@ -153,7 +153,7 @@
 	</div>
 	
 	<?php
-		$conn->close();
+		//$conn->close();
 	?>
 	
 	<!-- Bootstrap -->

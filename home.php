@@ -11,7 +11,6 @@
   	header("location: index.php");
   }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,7 +44,7 @@
 				// This is called when user submits information to create a deck
 				if (isset($_POST['createDeckButton'])) {
 					
-					include 'php/db_connection.php';
+					//include 'php/db_connection.php';
 					
 					// Deck values
 					$userID = $_SESSION['userID']; // Get user ID from session
@@ -68,7 +67,7 @@
 					$query = 'INSERT INTO deck (title, description, image, userID, public) VALUES (?, ?, ?, ?, ?)';
 					$types = 'ssbii';
 					$parameters = array($title, $description, $null, $userID, $isPublic);
-					$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName);
+					$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
 					
 					if ($result == True) { // If query was successful
 						// Display alert box
@@ -122,8 +121,8 @@
 						echo "</script>";
 					}
 					
-					$stmt->close();
-					$conn->close();
+					//$stmt->close();
+					//$conn->close();
 				}
 			?>
 			
