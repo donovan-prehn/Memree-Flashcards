@@ -12,6 +12,18 @@
   }
 ?>
 
+<?php
+	include 'php/db_connection.php';
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "memree_flashcards";
+	
+	$db = new DbConnection($servername, $username, $password, $dbname);
+	$db->connect();
+	$conn = $db->getConnection();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,8 +56,6 @@
 			<?php
 				// This is called when user submits information to create a deck
 				if (isset($_POST['createDeckButton'])) {
-					
-					include 'php/db_connection.php';
 					
 					// Deck values
 					$userID = $_SESSION['userID']; // Get user ID from session
@@ -84,7 +94,6 @@
 					}
 					
 					$stmt->close();
-					$conn->close();
 				}
 			?>
 			
@@ -92,8 +101,6 @@
 			<?php
 				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
 				if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
-
-					include 'php/db_connection.php';
 					
 					$userID = $_SESSION['userID']; // Get user ID from session
 					if (isset($_GET['deckID'])) {
@@ -133,7 +140,6 @@
 					}
 					
 					$stmt->close();
-					$conn->close();
 				}
 			?>
 			
@@ -240,6 +246,10 @@
 		</div>
 	  </div>
 	</div>
+	
+	<?php
+		$conn->close();
+	?>
 	
 	<!-- Bootstrap -->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

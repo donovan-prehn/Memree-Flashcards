@@ -113,8 +113,6 @@
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
 		
-		include 'php/db_connection.php';
-		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
 		$deckID = $_POST['deckID']; // Get deck ID from hidden input

@@ -21,8 +21,8 @@
 		$imageStringQ = "icon.png"; // Default value if no image was selected
 		$imageStringA = "icon.png"; // Default value if no image was selected
 		
-		$card = new Card($deck->getDeckID(), $cardID, $question, $answer, "icon.png", "icon.png");
-		
+		// Create new card
+		$card = new Card($deck->getDeckID(), $cardID, $question, $answer, "icon.png", "icon.png");		
 		
 		if ($imageBlobQ != null) { // Image was selected for question
 			$imageQ = imagecreatefromstring($imageBlobQ);  // Create an image object out of the blob
