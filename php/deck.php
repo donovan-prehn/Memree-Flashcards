@@ -10,7 +10,7 @@
 		public function __construct($dID, $t, $descrip, $imBlob, $uID, $isPublic){
 			$this->deckID = $dID;
 			$this->title = $t;
-			$this->decription = $descrip;
+			$this->description = $descrip;
 			$this->image = $imBlob;
 			$this->userID = $uID;
 			$this->isPublic = $isPublic;
