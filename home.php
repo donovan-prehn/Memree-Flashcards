@@ -81,7 +81,7 @@
 					$parameters = array(&$title, &$description, &$null, &$userID, &$isPublic);
 					$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
 					
-					if ($result == True) { // If query was successful
+					if ($result) { // If query was successful
 						// Display alert box
 						// Maybe find a nicer way to do this
 						echo '<script language="javascript">';
