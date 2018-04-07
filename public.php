@@ -15,6 +15,7 @@
 <?php
 	include 'php/DbConnection.php';
 	
+	//create db connection
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
 ?>
@@ -23,15 +24,15 @@
 <html>
 <head>
 	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="style.css">		<!--linking cutoms css-->
+	<link rel="stylesheet" type="text/css" href="css/main.css">	<!--linking cutoms css-->
 	 <!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 	<div class="container">
 	
-		<?php include 'php/nav-bar.php'; ?>
+		<?php include 'php/nav-bar.php'; ?>	
 	  
 		<div class="content">
 		
@@ -48,7 +49,7 @@
 			<?php endif ?>
 			
 			<div class="row">
-				<!-- display decks on home.php -->
+				<!-- display public decks only on public.php -->
 				<?php include 'php/displayPublicDecks.php'; ?>
 			</div>
 		</div>
