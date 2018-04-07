@@ -88,7 +88,6 @@
 								</form>
 								<form action="" method="post" style="display: inline-block;">
 									<input name="deckID" value="'.$this->deckID.'" hidden="true"/>
-									<input type="submit" id="deleteDeckSubmit'.$this->deckID.'" hidden="true">
 								</form>
 							  
 							  

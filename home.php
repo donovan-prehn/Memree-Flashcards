@@ -20,7 +20,7 @@
 	
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	$conn = $db->getDbConnection();
+	$conn = $db->getConnection();
 ?>
   
 <!DOCTYPE html>
@@ -100,7 +100,7 @@
 			<!-- deleteDeck -->
 			<?php
 				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
-				if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
+				if (isset($_GET['deckID']) or isset($_POST['deleteDeckButton'])) {
 					//include 'php/DbConnection.php';
 					
 					$userID = $_SESSION['userID']; // Get user ID from session
@@ -108,7 +108,7 @@
 						$deckID = $_GET['deckID']; // Get deck ID from $_GET (editDeck.php delete button)
 					}
 					else {
-						$deckID = $_POST['deckID']; // Get deck ID from $_POST (home.php delete button)
+						$deckID = $_POST['deleteDeckID']; // Get deck ID from $_POST (home.php delete button)
 					}
 									
 					$result = $db->runQuery('SELECT userID FROM deck WHERE deckID=?', 'i', $deckID);
@@ -176,11 +176,6 @@
 		$('#deleteDeckDialog').modal('show'); // Show the delete deck confirmation dialog
 	}
 	
-	function deleteDeck() { // Called when user confirms they want to delete the deck
-		var deckID = document.getElementById("deleteDeckID").value; // Get the ID of the deck to delete
-		document.getElementById("deleteDeckSubmit"+deckID).click(); // Simulate form submission
-	}
-	
 	</script>
 	
 	<!-------------------------------------------------------------------------------
@@ -232,9 +227,11 @@
 			Are you sure you want to delete this deck?
 		  </div>
 		  <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-primary" onclick="deleteDeck()">Delete</button>
-			<input id="deleteDeckID" hidden="true">
+			<form method="post">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<button name="deleteDeckButton" type="submit" class="btn btn-primary">Delete</button>
+				<input name="deleteDeckID" id="deleteDeckID" hidden="true">
+			</form>
 		  </div>
 		</div>
 	  </div>
