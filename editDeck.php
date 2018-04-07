@@ -13,7 +13,7 @@
 ?>
 
 <?php
-	include 'php/db_connection.php';
+	include 'php/DbConnection.php';
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
@@ -116,7 +116,7 @@
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
 		
-		//include 'php/db_connection.php';
+		//include 'php/DbConnection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session

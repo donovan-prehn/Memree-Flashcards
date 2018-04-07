@@ -6,15 +6,15 @@
 	$password = "";
 	$dbname = "memree_flashcards";
 
-	// Create DbConnection
+	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
 
-	// Check DbConnection
+	// Check connection
 	if ($conn->connect_error) {
-		die("DbConnection failed: " . $conn->connect_error);
+		die("Connection failed: " . $conn->connect_error);
 	}
 	*/
-	class DbDbConnection {
+	class DbConnection {
 		private $servername;
 		private $username;
 		private $password;
@@ -31,11 +31,11 @@
 		public function connect() {
 			$this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 			if ($this->conn->connect_error) {
-				die("DbConnection failed: " . $this->conn->connect_error);
+				die("Connection failed: " . $this->conn->connect_error);
 			}
 		}
 		
-		public function getDbConnection() {
+		public function getConnection() {
 			return $this->conn;
 		}
 		
@@ -91,6 +91,23 @@
 			return $result;
 			
 		}
+		
+		public function testQuery($query, $types, $parameters){
+			$stmt = $this->conn->prepare($query);
+			
+			if ($types != NULL){
+				//$stmt->bind_param($types, $parameters);
+				if (is_array($parameters))
+					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
+				else
+					$stmt->bind_param($types, $parameters);
+			}
+			$result = $stmt->execute(); // Run query
+			//$result = $stmt->get_result(); // Get the results of running the query
+			$stmt->close();
+			
+			return $result;
+		}	
 		
 	}
  ?>
