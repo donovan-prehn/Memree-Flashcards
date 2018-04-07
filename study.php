@@ -14,15 +14,15 @@
 ?>
 
 <?php
-	include 'php/db_connection.php';
+	include 'php/DbConnection.php';
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
 	$dbname = "memree_flashcards";
 	
-	$db = new DbConnection($servername, $username, $password, $dbname);
+	$db = new DbDbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	//$conn = $db->getConnection();
+	//$conn = $db->getDbConnection();
 ?>
 <!-- Get cards from database and store in JavaScript array -->
 <?php

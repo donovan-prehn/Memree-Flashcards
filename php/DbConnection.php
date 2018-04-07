@@ -6,15 +6,15 @@
 	$password = "";
 	$dbname = "memree_flashcards";
 
-	// Create connection
+	// Create DbConnection
 	$conn = new mysqli($servername, $username, $password, $dbname);
 
-	// Check connection
+	// Check DbConnection
 	if ($conn->connect_error) {
-		die("Connection failed: " . $conn->connect_error);
+		die("DbConnection failed: " . $conn->connect_error);
 	}
 	*/
-	class DbConnection {
+	class DbDbConnection {
 		private $servername;
 		private $username;
 		private $password;
@@ -31,11 +31,11 @@
 		public function connect() {
 			$this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 			if ($this->conn->connect_error) {
-				die("Connection failed: " . $this->conn->connect_error);
+				die("DbConnection failed: " . $this->conn->connect_error);
 			}
 		}
 		
-		public function getConnection() {
+		public function getDbConnection() {
 			return $this->conn;
 		}
 		

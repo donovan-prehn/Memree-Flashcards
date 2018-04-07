@@ -12,15 +12,15 @@
 ?>
 
 <?php
-	include 'php/db_connection.php';
+	include 'php/DbConnection.php';
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
 	$dbname = "memree_flashcards";
 	
-	$db = new DbConnection($servername, $username, $password, $dbname);
+	$db = new DbDbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	$conn = $db->getConnection();
+	$conn = $db->getDbConnection();
 ?>
   
 <!DOCTYPE html>
@@ -56,7 +56,7 @@
 				// This is called when user submits information to create a deck
 				if (isset($_POST['createDeckButton'])) {
 					
-					//include 'php/db_connection.php';
+					//include 'php/DbConnection.php';
 					
 					// Deck values
 					$userID = $_SESSION['userID']; // Get user ID from session
@@ -101,7 +101,7 @@
 			<?php
 				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
 				if (isset($_GET['deckID']) or isset($_POST['deckID'])) {
-					//include 'php/db_connection.php';
+					//include 'php/DbConnection.php';
 					
 					$userID = $_SESSION['userID']; // Get user ID from session
 					if (isset($_GET['deckID'])) {
