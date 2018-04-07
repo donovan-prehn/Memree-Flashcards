@@ -21,7 +21,7 @@
 	
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	//$conn = $db->getConnection();
+	$conn = $db->getConnection();
 ?>
 
 <?php
@@ -182,8 +182,8 @@
 			$query = "INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES (?, ?, ?, ?, ?)";
 			$types = 'issbb';
 			$parameters = array(&$deckID, &$question, &$answer, &$null, &$null);
-			&$imageQLoc = 3;
-			&$imageALoc = 3;
+			$imageQLoc = 3;
+			$imageALoc = 3;
 			$result = $db->sendQueryWithTwoBlobs($query, $types, $parameters, $imageNameQ, $imageNameA, 3, 4);
 		}
 		
@@ -242,7 +242,7 @@
 			$query = 'UPDATE deck SET title=?, description=?, image=?, public=?  WHERE userID=? and deckID=?';
 			$types = 'ssbiii';
 			$parameters = array(&$title, &$description, &$null, &$isPublic, &$userID, &$deckID);
-			$result = $db->sendQueryWithBlob($query, $types, $parameters);
+			$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
 		}
 		
 		if ($result) { // If query was successful
