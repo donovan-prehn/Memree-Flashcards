@@ -14,11 +14,7 @@
 
 <?php
 	include 'php/DbConnection.php';
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "memree_flashcards";
-	
+
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
 	$conn = $db->getConnection();
@@ -32,17 +28,10 @@
 		$types = 'i';
 		$paramteres = array(&$cardID);
 		$result = $db->testQuery($query, $types, $paramteres);
-		//$stmt = $conn->prepare($query);
-		//$stmt->bind_param('i', $cardID);
-		
-		if (!$result) { // If query was not successful
-			echo '<script language="javascript">';
-			echo 'alert("Delete card failed")';
-			echo '</script>';
-		}
-		
-		//$stmt->close();
 
+		if (!$result) { // If query was not successful
+			echo '<script language="javascript">alert("Delete card failed")</script>';
+		}
 	}
 ?>
 
@@ -51,8 +40,6 @@
 	if (isset($_POST['editCardButton'])) {
 		
 		// Card values
-		//$userID = $_SESSION['userID']; // Get user ID from session
-		//$deckID = $_POST['deckID']; // Get deck ID from hidden input
 		$cardID = $_POST['cardID']; // Get card ID from hidden input
 		$question = $_POST['editCardQ']; // Get card question from textfield
 		$answer = $_POST['editCardA']; // Get card answer from textfield

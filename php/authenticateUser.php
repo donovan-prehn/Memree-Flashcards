@@ -1,10 +1,8 @@
 <?php
-	// initializing variables
 	$username = "";
 	$errors = array(); 
 	$alerts = array();
-
-	// connect to the database
+	
 	$db = mysqli_connect('localhost', 'root', '', 'memree_flashcards');
 	
 	// LOGIN USER

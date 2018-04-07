@@ -15,32 +15,22 @@
 
 <?php
 	include 'php/DbConnection.php';
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "memree_flashcards";
-	
+
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	//$conn = $db->getDbConnection();
+
 ?>
 <!-- Get cards from database and store in JavaScript array -->
 <?php
 		if (isset($_GET['deckID'])) {
 			$deckID = $_GET['deckID'];
-			//$stmt = $conn->prepare('SELECT * FROM card WHERE deckID=?'); // Get all fields from selected card
-			//$stmt->bind_param('i', $deckID);
-			
-			//$stmt->execute(); // Run query
 			
 			$result = $db->runQuery('SELECT * FROM card WHERE deckID=?', 'i', $deckID);
-			//$result = $stmt->get_result(); // Get the results of running the query
 			
 			if (!$result) {
-				echo '<script language="javascript">';
-				echo 'alert("Unable to find deck.")';
-				echo '</script>';
+				echo '<script language="javascript">alert("Unable to find deck.");</script>';
 			}
+			
 			$cards = array();
 			$index = 0;
 			while($card = $result->fetch_assoc()) {
@@ -63,7 +53,6 @@
 
 				$index=$index+1;
 			}
-			//$stmt->close();
 		}
 ?>
 		
@@ -201,9 +190,5 @@
 
 	</script>
 			
-	<?php
-		//$conn->close();
-	?>
-
 </body>
 </html>

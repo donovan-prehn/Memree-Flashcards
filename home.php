@@ -13,11 +13,7 @@
 
 <?php
 	include 'php/DbConnection.php';
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "memree_flashcards";
-	
+
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
 	$conn = $db->getConnection();

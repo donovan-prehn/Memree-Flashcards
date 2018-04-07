@@ -1,19 +1,10 @@
  <?php
-	/*
-	// Database values
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "memree_flashcards";
+ 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "memree_flashcards";
 
-	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
-
-	// Check connection
-	if ($conn->connect_error) {
-		die("Connection failed: " . $conn->connect_error);
-	}
-	*/
 	class DbConnection {
 		private $servername;
 		private $username;
@@ -60,7 +51,7 @@
 			$stmt = $this->conn->prepare($query);
 			
 			if ($types != NULL){
-				//$stmt->bind_param($types, $parameters);
+
 				if (is_array($parameters))
 					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 				else
@@ -110,4 +101,6 @@
 		}	
 		
 	}
+	
+
  ?>
