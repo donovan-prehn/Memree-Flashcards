@@ -13,10 +13,9 @@
 
 <?php
 	include 'php/DbConnection.php';
-
+	//start up db connection
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	$conn = $db->getConnection();
 ?>
   
 <!DOCTYPE html>
@@ -31,7 +30,7 @@
 <body>
 	<div class="container">
 	
-		<?php include 'php/nav-bar.php'; ?>
+		<?php include 'php/nav-bar.php'; ?>	
 	  
 		<div class="content">
 		
@@ -52,8 +51,6 @@
 				// This is called when user submits information to create a deck
 				if (isset($_POST['createDeckButton'])) {
 					
-					//include 'php/DbConnection.php';
-					
 					// Deck values
 					$userID = $_SESSION['userID']; // Get user ID from session
 					$title = $_POST['deckTitle']; // Get deck title from textfield
@@ -64,32 +61,24 @@
 					$madePublic = isset($_POST['publicCheck']); // Check to see value for the checkbox 
 		
 					if($madePublic)
-						$isPublic = 1;
+						$isPublic = 1;		//convert true value from checkbox to 1 to store in table
 					else
-						$isPublic = 0;
+						$isPublic = 0;		//convert false value from checkbox to 0 to store in table
 					
 					if (!$imageName) { // No image selected, use default image
 						$imageName = "icon.png";
 					} 
 					// Query to insert new deck
 					$query = 'INSERT INTO deck (title, description, image, userID, public) VALUES (?, ?, ?, ?, ?)';
-					$types = 'ssbii';
-					$parameters = array(&$title, &$description, &$null, &$userID, &$isPublic);
+					$types = 'ssbii';		//data types of parameteres
+					$parameters = array(&$title, &$description, &$null, &$userID, &$isPublic);	//array of parameters to be stored given to query
 					$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
 					
-					if ($result) { // If query was successful
-						// Display alert box
-						// Maybe find a nicer way to do this
-						echo '<script language="javascript">';
-						echo 'alert("New deck created.")';
-						echo '</script>';
-					}
-					else {
+					if (!$result) { // If query was unsuccessful
 						echo '<script language="javascript">';
 						echo 'alert("Deck creation NOT successful")';
 						echo '</script>';
 					}
-					//$conn->close();
 				}
 			?>
 			
@@ -97,7 +86,6 @@
 			<?php
 				// This is called when the user wants to delete deck (either from home.php or editDeck.php)
 				if (isset($_GET['deckID']) or isset($_POST['deleteDeckButton'])) {
-					//include 'php/DbConnection.php';
 					
 					$userID = $_SESSION['userID']; // Get user ID from session
 					if (isset($_GET['deckID'])) {
@@ -107,12 +95,12 @@
 						$deckID = $_POST['deleteDeckID']; // Get deck ID from $_POST (home.php delete button)
 					}
 									
-					$result = $db->runQuery('SELECT userID FROM deck WHERE deckID=?', 'i', $deckID);
+					$result = $db->runQuery('SELECT userID FROM deck WHERE deckID=?', 'i', $deckID);		//get userID of user who's deck is going to be deleter do verify current user is owner of deck
 					
 					if ($row = $result->fetch_assoc()) { // If there is a result from query, i.e., the deckID exists
 						if ($row['userID'] == $userID) { // User ID matches (can only delete a deck you own)
-							$result = $db->runQuery('DELETE FROM card WHERE deckID=?', 'i', $deckID);
-							$result = $db->runQuery('DELETE FROM deck WHERE deckID=?', 'i', $deckID);
+							$result = $db->runQuery('DELETE FROM card WHERE deckID=?', 'i', $deckID);		//delete all cards that belong for the deck
+							$result = $db->runQuery('DELETE FROM deck WHERE deckID=?', 'i', $deckID);		//delete the deck from the deck table
 							
 						}
 						else { // User ID does not match, i.e., trying to delete someone else's deck
@@ -126,12 +114,10 @@
 						echo "window.alert('Error: Deck does not exist.');";
 						echo "</script>";
 					}
-					
-					//$stmt->close();
-					//$conn->close();
 				}
 			?>
 			
+			<!--create deck button-->
 			<input type="button" value="Create Deck" class="btn btn-primary" data-target="#createDeckDialog" data-toggle="modal">
 			
 			<div class="row">

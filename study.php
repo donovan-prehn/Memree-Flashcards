@@ -16,6 +16,7 @@
 <?php
 	include 'php/DbConnection.php';
 
+	//setup connection to db
 	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
 
@@ -23,8 +24,9 @@
 <!-- Get cards from database and store in JavaScript array -->
 <?php
 		if (isset($_GET['deckID'])) {
+			//get the deckID of the deck submitted
 			$deckID = $_GET['deckID'];
-			
+			//get the record of the deck
 			$result = $db->runQuery('SELECT * FROM card WHERE deckID=?', 'i', $deckID);
 			
 			if (!$result) {
