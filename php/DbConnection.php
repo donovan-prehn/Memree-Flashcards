@@ -1,5 +1,5 @@
  <?php
- 
+//Connection information to be used by PHP code that includes this class definition 
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -34,7 +34,6 @@ $dbname = "memree_flashcards";
 			$stmt = $this->conn->prepare($query);
 			
 			if ($types != NULL){
-				//$stmt->bind_param($types, $parameters);
 				if (is_array($parameters))
 					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 				else
@@ -51,7 +50,6 @@ $dbname = "memree_flashcards";
 			$stmt = $this->conn->prepare($query);
 			
 			if ($types != NULL){
-
 				if (is_array($parameters))
 					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 				else
@@ -87,14 +85,13 @@ $dbname = "memree_flashcards";
 			$stmt = $this->conn->prepare($query);
 			
 			if ($types != NULL){
-				//$stmt->bind_param($types, $parameters);
+
 				if (is_array($parameters))
 					call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $parameters));
 				else
 					$stmt->bind_param($types, $parameters);
 			}
 			$result = $stmt->execute(); // Run query
-			//$result = $stmt->get_result(); // Get the results of running the query
 			$stmt->close();
 			
 			return $result;

@@ -9,8 +9,8 @@
 		
 		public function __construct($dID, $t, $descrip, $imBlob, $uID, $isPublic){
 			$this->deckID = $dID;
-			$this->title = $t;
-			$this->description = $descrip;
+			$this->title = htmlspecialchars($t);	//to prevent XSS
+			$this->description = htmlspecialchars($descrip);
 			$this->image = $imBlob;
 			$this->userID = $uID;
 			$this->isPublic = $isPublic;
@@ -46,6 +46,7 @@
 			return $this->isPublic;
 		}
 		
+		//HTML Code used to display the the deck. Contains title, description, owner, image
 		public function displayPublicDeck($username){
 			echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
 							<img class="card-img-top" height="277px" width="200px" src="data:image/jpg;base64,' .  base64_encode($this->image)  . '" alt="Card image cap">
@@ -63,7 +64,7 @@
 						</div>';
 			
 		}
-		
+		//HTML Code used to display the the deck. Contains title, description, image
 		public function displayDeck(){
 			echo '	<div class="card mx-2 my-2" style="width: 18rem;display: inline-block;">
 							

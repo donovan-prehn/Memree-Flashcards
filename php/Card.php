@@ -10,12 +10,12 @@
 		function __construct($dID, $cID, $q, $a, $qImg, $aImg) {
 			$this->deckID = $dID;
 			$this->cardID = $cID;
-			$this->question = $q;
-			$this->answer = $a;
+			$this->question = htmlspecialchars($q); //to prevent XSS
+			$this->answer = htmlspecialchars($a);
 			$this->questionImage = $qImg;
 			$this->answerImage = $aImg;
 		}
-		
+
 		// Getters
 		public function getDeckID(){
 			return $this->deckID;
@@ -56,7 +56,7 @@
 		public function setAnswerImage($aImg){
 			$this->answerImage = $aImg;
 		}
-		
+		//HTML used to display card. Contains question, answer, and an image for each
 		public function displayCard(){
 			echo "	<div class='card' style='width: 18rem; display: inline-block;'>
 				<button type='button' class='close' aria-label='Close' style='position:absolute; right:0px; top:-10px;' onclick='prepareDeleteCard($this->cardID)'>
