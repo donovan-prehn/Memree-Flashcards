@@ -13,15 +13,15 @@
 ?>
 
 <?php
-	include 'php/DbConnection.php';
+	include 'php/db_connection.php';
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
 	$dbname = "memree_flashcards";
 	
-	$db = new DbDbConnection($servername, $username, $password, $dbname);
+	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
-	$conn = $db->getDbConnection();
+	$conn = $db->getConnection();
 ?>
 
 <?php
@@ -31,18 +31,11 @@
 		$query = 'DELETE FROM card WHERE cardID=?';
 		$types = 'i';
 		$paramteres = array(&$cardID);
-		$result = $db->runQuery($query, $types, $paramteres);
+		$result = $db->testQuery($query, $types, $paramteres);
 		//$stmt = $conn->prepare($query);
 		//$stmt->bind_param('i', $cardID);
 		
-		if ($result) { // If query was successful
-			// Display alert box
-			// Maybe find a nicer way to do this
-			echo '<script language="javascript">';
-			echo 'alert("Card deleted successfully")';
-			echo '</script>';
-		}
-		else {
+		if (!$result) { // If query was not successful
 			echo '<script language="javascript">';
 			echo 'alert("Delete card failed")';
 			echo '</script>';
@@ -93,7 +86,7 @@
 				//$stmt = $conn->prepare('UPDATE card SET question=?, answer=? WHERE cardID=?');
 				//$stmt->bind_param('ssi', $question, $answer, $cardID);
 				$parameters = array(&$question, &$answer, &$cardID);
-				$result = $db->runQuery('UPDATE card SET question=?, answer=? WHERE cardID=?', 'ssi', $parameters);
+				$result = $db->testQuery('UPDATE card SET question=?, answer=? WHERE cardID=?', 'ssi', $parameters);
 			}
 		} 
 		else { // Images selected for both Q/A
@@ -108,14 +101,7 @@
 			$result = $db->sendQueryWithTwoBlobs($query, $types, $parameters, $imageNameQ, $imageNameA, 2, 3);
 		}
 		
-		if ($result == True) { // If query was successful
-			// Display alert box
-			// Maybe find a nicer way to do this
-			echo '<script language="javascript">';
-			echo 'alert("Card edited successfully")';
-			echo '</script>';
-		}
-		else {
+		if (!$result) { // If query was not successful
 			echo '<script language="javascript">';
 			echo 'alert("Edit card failed")';
 			echo '</script>';
@@ -130,7 +116,7 @@
 	// This is called when the "Add Card" button is clicked
 	if (isset($_POST['addCardButton'])) {
 		
-		//include 'php/DbConnection.php';
+		//include 'php/db_connection.php';
 		
 		// Card values
 		//$userID = $_SESSION['userID']; // Get user ID from session
@@ -170,7 +156,7 @@
 				$query = "INSERT INTO card (deckID, question, answer) VALUES (?, ?, ?)";
 				$types = 'iss';
 				$parameters = array(&$deckID, &$question, &$answer);
-				$result = $db->runQuery($query, $types, $parameters);
+				$result = $db->testQuery($query, $types, $parameters);
 			}
 		} 
 		else { // Images selected for both Q/A
@@ -182,19 +168,10 @@
 			$query = "INSERT INTO card (deckID, question, answer, questionImage, answerImage) VALUES (?, ?, ?, ?, ?)";
 			$types = 'issbb';
 			$parameters = array(&$deckID, &$question, &$answer, &$null, &$null);
-			$imageQLoc = 3;
-			$imageALoc = 3;
 			$result = $db->sendQueryWithTwoBlobs($query, $types, $parameters, $imageNameQ, $imageNameA, 3, 4);
 		}
 		
-		if ($result) { // If query was successful
-			// Display alert box
-			// Maybe find a nicer way to do this
-			echo '<script language="javascript">';
-			echo 'alert("New card added")';
-			echo '</script>';
-		}
-		else {
+		if (!$result) { // If query was not successful
 			echo '<script language="javascript">';
 			echo 'alert("Error occurred when adding card")';
 			echo '</script>';
@@ -230,7 +207,7 @@
 			$query = 'UPDATE deck SET title=?, description=?, public=? WHERE userID=? and deckID=?';
 			$types = 'ssiii';
 			$parameters = array(&$title, &$description, &$isPublic, &$userID, &$deckID);
-			$result = $db->runQuery($query, $types, $parameters);
+			$result = $db->testQuery($query, $types, $parameters);
 		} 
 		else {
 			$null = NULL; // bind_param() requires parameters
@@ -242,17 +219,10 @@
 			$query = 'UPDATE deck SET title=?, description=?, image=?, public=?  WHERE userID=? and deckID=?';
 			$types = 'ssbiii';
 			$parameters = array(&$title, &$description, &$null, &$isPublic, &$userID, &$deckID);
-			$result = $db->sendQueryWithBlob($query, $types, $parameters, $imageName, 2);
+			$result = $db->sendQueryWithBlob($query, $types, $parameters);
 		}
 		
-		if ($result) { // If query was successful
-			// Display alert box
-			// Maybe find a nicer way to do this
-			echo '<script language="javascript">';
-			echo 'alert("Deck updated successfully")';
-			echo '</script>';
-		}
-		else {
+		if (!$result) { // If query was not successful
 			echo '<script language="javascript">';
 			echo 'alert("Deck update NOT successful")';
 			echo '</script>';
@@ -285,7 +255,7 @@
 		$parameters = Null;
 		$result = $db->runQuery($query, $types, $parameters);
 		
-		if ($result) { // If query was successful
+		if (mysqli_num_rows($result) > 0) { // If query was successful
 		
 			$row = $result->fetch_assoc(); // Get the row
 			
