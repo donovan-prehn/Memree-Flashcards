@@ -19,7 +19,7 @@
 	$password = "";
 	$dbname = "memree_flashcards";
 	
-	$db = new DbDbConnection($servername, $username, $password, $dbname);
+	$db = new DbConnection($servername, $username, $password, $dbname);
 	$db->connect();
 	//$conn = $db->getDbConnection();
 ?>
